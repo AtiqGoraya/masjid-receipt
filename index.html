@@ -1210,7 +1210,7 @@
       if (gregEl) gregEl.value = computed.gregorianUrdu;
       if (hijriEl) hijriEl.value = computed.hijriUrdu;
 
-      if (state.activePreviewReceipt) {
+      if (state.activePreviewReceipt && state.activePreviewReceipt.temp_id === 'DRAFT-PREVIEW') {
         state.activePreviewReceipt.date_formatted = computed.gregorianUrdu;
         state.activePreviewReceipt.hijri_date = computed.hijriUrdu;
         renderOfficialReceiptCard(state.activePreviewReceipt);
@@ -1584,7 +1584,7 @@
         if (raw) {
           const parsed = JSON.parse(raw);
           if (Array.isArray(parsed) && parsed.length > 0) {
-            state.receipts = parsed;
+            state.receipts = sortAllReceiptsForDisplay(parsed);
             return true;
           }
         }
@@ -1592,6 +1592,28 @@
         console.warn('localStorage load warning:', e);
       }
       return false;
+    }
+
+    // Helper: Sort receipts descending (Newest first, pending offline at top)
+    function sortAllReceiptsForDisplay(list) {
+      return (list || []).slice().sort((a, b) => {
+        const aPending = a.sync_status !== 'synced';
+        const bPending = b.sync_status !== 'synced';
+        if (aPending && !bPending) return -1;
+        if (!aPending && bPending) return 1;
+        if (aPending && bPending) {
+          const timeA = new Date(a.offline_created_at || a.created_at || 0).getTime() || 0;
+          const timeB = new Date(b.offline_created_at || b.created_at || 0).getTime() || 0;
+          return timeB - timeA;
+        }
+        if (a.receipt_no && b.receipt_no) {
+          const cmp = b.receipt_no.localeCompare(a.receipt_no, undefined, { numeric: true });
+          if (cmp !== 0) return cmp;
+        }
+        const timeA = new Date(a.created_at || a.offline_created_at || 0).getTime() || 0;
+        const timeB = new Date(b.created_at || b.offline_created_at || 0).getTime() || 0;
+        return timeB - timeA;
+      });
     }
 
     function getActiveBackendUrl() {
@@ -1667,13 +1689,26 @@
                 merged.push(sr);
               }
             }
-            state.receipts = merged;
+            state.receipts = sortAllReceiptsForDisplay(merged);
             state.serverSeqCounter = Math.max(state.serverSeqCounter, serverReceipts.length);
             saveReceiptsToLocalStorage();
             renderReceiptsList();
-            if (state.receipts[0]) {
+
+            // PREVIEW CARD UPDATE: Keep user's current receipt view intact, never revert to old receipt!
+            if (state.activePreviewReceipt && state.activePreviewReceipt.temp_id !== 'DRAFT-PREVIEW') {
+              const activeKey = state.activePreviewReceipt.receipt_no || state.activePreviewReceipt.temp_id;
+              if (activeKey) {
+                const refreshed = state.receipts.find(
+                  (r) => (r.receipt_no && r.receipt_no === activeKey) || (r.temp_id && r.temp_id === activeKey)
+                );
+                if (refreshed) {
+                  renderOfficialReceiptCard(refreshed);
+                }
+              }
+            } else if (!state.activePreviewReceipt && state.receipts.length > 0) {
               renderOfficialReceiptCard(state.receipts[0]);
             }
+
             if (showNotice) {
               showToast(`گوگل شیٹ سے تمام ${serverReceipts.length} رسیدیں سنک ہو گئیں۔`, 'success');
             }
@@ -2258,6 +2293,7 @@
           deleted: false
         };
         state.receipts.unshift(offlineReceipt);
+        state.receipts = sortAllReceiptsForDisplay(state.receipts);
         saveReceiptsToLocalStorage();
         renderOfficialReceiptCard(offlineReceipt);
         renderReceiptsList();
@@ -2297,6 +2333,7 @@
             version: Number(existing.version) + 1
           };
           state.receipts[existingIdx] = updated;
+          state.receipts = sortAllReceiptsForDisplay(state.receipts);
           saveReceiptsToLocalStorage();
           document.getElementById('editReceiptNo').value = '';
           document.getElementById('editModeIndicator').classList.add('hidden');
@@ -2349,12 +2386,13 @@
                 created.updated_at = serverRec.updated_at || nowIso;
                 
                 // Add to local state (replace or unshift)
-                const existingIdx = state.receipts.findIndex(r => r.temp_id === tempOnlineId || (r.receipt_no && r.receipt_no === created.receipt_no));
+                const existingIdx = state.receipts.findIndex(r => (r.temp_id && r.temp_id === tempOnlineId) || (r.receipt_no && r.receipt_no === created.receipt_no));
                 if (existingIdx !== -1) {
                   state.receipts[existingIdx] = created;
                 } else {
                   state.receipts.unshift(created);
                 }
+                state.receipts = sortAllReceiptsForDisplay(state.receipts);
                 saveReceiptsToLocalStorage();
                 renderOfficialReceiptCard(created);
                 renderReceiptsList();
@@ -2369,6 +2407,7 @@
                 created.receipt_no = '';
                 created.sync_status = 'saved_locally';
                 state.receipts.unshift(created);
+                state.receipts = sortAllReceiptsForDisplay(state.receipts);
                 saveReceiptsToLocalStorage();
                 renderOfficialReceiptCard(created);
                 renderReceiptsList();
@@ -2417,9 +2456,14 @@
               item.created_at = (matched && matched.created_at) ? matched.created_at : nowIso;
               item.updated_at = (matched && matched.updated_at) ? matched.updated_at : nowIso;
             }
+            state.receipts = sortAllReceiptsForDisplay(state.receipts);
             saveReceiptsToLocalStorage();
             if (state.activePreviewReceipt) {
-              renderOfficialReceiptCard(state.activePreviewReceipt);
+              const activeKey = state.activePreviewReceipt.receipt_no || state.activePreviewReceipt.temp_id;
+              const refreshed = state.receipts.find((r) => (r.receipt_no && r.receipt_no === activeKey) || (r.temp_id && r.temp_id === activeKey));
+              if (refreshed) {
+                renderOfficialReceiptCard(refreshed);
+              }
             }
             renderReceiptsList();
             showToast(`ماشاء اللہ! ${sorted.length} آف لائن رسیدیں گوگل شیٹ میں کامیابی سے سنک ہو گئیں!`, 'success');
@@ -2566,7 +2610,9 @@
       document.getElementById('inputDonorAddress').value = 'محلہ اسلم آباد، جھمرہ سٹی';
       document.getElementById('inputDonorPhone').value = '';
       document.getElementById('displayAmountWords').textContent = '—';
-      state.receipts[0].receiver_name = 'مولانا محمد قمر (امام و منتظم مسجد)';
+      if (state.receipts && state.receipts[0]) {
+        state.receipts[0].receiver_name = 'مولانا محمد قمر (امام و منتظم مسجد)';
+      }
       loadReceiptsFromLocalStorage();
       applyPakistanDateToForm(new Date(), false);
       updateLiveFormPreview();
