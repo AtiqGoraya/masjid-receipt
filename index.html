@@ -134,7 +134,7 @@
     }
     @media (max-width: 767px) {
       body {
-        padding-bottom: 76px;
+        padding-bottom: 24px;
       }
       input, select, textarea {
         font-size: 16px !important;
@@ -167,7 +167,7 @@
   </div>
 
   <!-- App Header Bar -->
-  <header class="no-print bg-emerald-950 text-white border-b-2 border-amber-500 shadow-lg sticky top-0 z-30">
+  <header class="no-print bg-emerald-950 text-white border-b-2 border-amber-500 shadow-lg static md:sticky md:top-0 z-30">
     <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
       <div class="flex items-center gap-3">
         <!-- Mosque Icon SVG -->
@@ -222,16 +222,16 @@
         <span>🔄</span>
         <span>شیٹ سے لائیو سنک کریں</span>
       </button>
-      <button id="tabBtnSyncLab" type="button" class="nav-tab-btn px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-bold text-emerald-100 hover:bg-emerald-900 transition">
+      <button id="tabBtnSyncLab" type="button" class="nav-tab-btn developer-only hidden px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-bold text-emerald-100 hover:bg-emerald-900 transition">
         آف لائن اور سنک سینٹر (<span id="navPendingCount">0</span>)
       </button>
-      <button id="tabBtnBackup" type="button" class="nav-tab-btn px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-bold text-emerald-100 hover:bg-emerald-900 transition">
+      <button id="tabBtnBackup" type="button" class="nav-tab-btn developer-only hidden px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-bold text-emerald-100 hover:bg-emerald-900 transition">
         بیک اپ، CSV اور ری اسٹور
       </button>
-      <button id="tabBtnSettings" type="button" class="nav-tab-btn px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-bold text-emerald-100 hover:bg-emerald-900 transition">
+      <button id="tabBtnSettings" type="button" class="nav-tab-btn developer-only hidden px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-bold text-emerald-100 hover:bg-emerald-900 transition">
         ترتیبات اور سیکیورٹی ٹیسٹ
       </button>
-      <button id="btnCopyExtensionCodeTop" type="button" class="px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-bold bg-emerald-600 hover:bg-emerald-500 text-white border border-amber-300 shadow transition">
+      <button id="btnCopyExtensionCodeTop" type="button" class="developer-only hidden px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-bold bg-emerald-600 hover:bg-emerald-500 text-white border border-amber-300 shadow transition">
         ⚡ ایکسٹینشن کوڈ کاپی کریں (Code.gs)
       </button>
     </nav>
@@ -241,7 +241,8 @@
   <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-5 space-y-6">
 
     <!-- Chrome Mobile App Install / Download Banner (For 90% Mobile Users) -->
-    <section id="mobileInstallBanner" class="no-print bg-gradient-to-r from-emerald-900 via-emerald-800 to-emerald-900 text-white rounded-2xl p-3.5 shadow-md border-2 border-amber-400 flex flex-wrap items-center justify-between gap-3">
+    <section id="mobileInstallBanner" class="no-print bg-gradient-to-r from-emerald-900 via-emerald-800 to-emerald-900 text-white rounded-2xl p-3.5 shadow-md border-2 border-amber-400 flex flex-wrap items-center justify-between gap-3 relative">
+      <button id="btnDismissInstallBanner" type="button" class="absolute top-2 left-2 text-emerald-200 hover:text-white text-xs font-bold px-2 py-0.5 rounded bg-black/20 hover:bg-black/40 transition">✕ بند کریں</button>
       <div class="flex items-center gap-2.5">
         <div class="w-10 h-10 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center text-xl font-bold shrink-0 shadow">
           📲
@@ -272,39 +273,30 @@
           <div class="flex flex-wrap items-center gap-2">
             <span class="text-sm font-bold text-emerald-950">🔒 سیکیورٹی و رسائی کنٹرول:</span>
             <span id="currentUserBadge" class="px-3 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-900 border border-emerald-300">
-              فعال صارف: مولانا محمد قمر (مجاز برائے رسید سازی)
+              فعال اکاؤنٹ: مولانا محمد قمر (رسید ساز)
             </span>
           </div>
           <p class="text-xs text-slate-600">
-            <strong>رسید سازی:</strong> صرف مولانا محمد قمر (<strong>qamar</strong>) رسید جاری کر سکتے ہیں۔ | <strong>ترتیبات:</strong> ڈویلپر اکاؤنٹ (<strong>atiqg</strong>) سے ترتیبات و کنفیگریشن درست کی جا سکتی ہے۔
+            <strong>رسید سازی:</strong> صرف مولانا محمد قمر کے مجاز اکاؤنٹ سے ممکن ہے | <strong>ترتیبات و بیک اپ:</strong> Atiq Goraya (ڈویلپر) اکاؤنٹ سے درست کی جا سکتی ہیں۔
           </p>
         </div>
 
         <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-          <button id="btnLoginQamar" data-testid="btn-login-qamar" type="button" class="flex-1 sm:flex-initial px-3 py-2 rounded-xl text-xs font-bold bg-emerald-700 text-white border border-emerald-800 shadow-sm transition">
-            ✍️ مولانا محمد قمر (رسید ساز)
-          </button>
-          <button id="btnLoginAtiq" data-testid="btn-login-atiq" type="button" class="flex-1 sm:flex-initial px-3 py-2 rounded-xl text-xs font-bold bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-300 transition">
-            ⚙️ Atiq Goraya (ڈویلپر اکاؤنٹ)
-          </button>
-          <button id="btnLoginUnlisted" data-testid="btn-demo-unlisted" type="button" class="flex-1 sm:flex-initial px-3 py-2 rounded-xl text-xs font-bold bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-300 transition">
-            🚫 غیر مجاز اکاؤنٹ
-          </button>
-          <button id="btnOpenPasswordModal" type="button" class="flex-1 sm:flex-initial px-3 py-2 rounded-xl text-xs font-bold bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-sm transition">
-            🔑 پاسورڈ تصدیق
+          <button id="btnOpenPasswordModal" type="button" class="flex-1 sm:flex-initial px-3.5 py-2 rounded-xl text-xs font-bold bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-sm transition">
+            🔑 رائٹر سیشن فعال کریں
           </button>
         </div>
       </div>
 
-      <!-- Direct Gmail Verification Input Bar -->
-      <div class="bg-slate-50 border border-slate-200 rounded-xl p-2.5 flex flex-wrap items-center justify-between gap-2">
+      <!-- Secure Account Verification Input Bar (No prefilled emails!) -->
+      <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 flex flex-wrap items-center justify-between gap-2">
         <label for="inputQuickGmailVerify" class="text-xs font-bold text-slate-700">
-          اپنا منظور شدہ جی میل ایڈریس چیک / تبدیل کریں:
+          منظور شدہ اکاؤنٹ لاگ ان / تصدیق کریں:
         </label>
         <div class="flex flex-wrap items-center gap-2 flex-1 max-w-md">
-          <input id="inputQuickGmailVerify" type="email" dir="ltr" value="qamarattari49@gmail.com" placeholder="منظور شدہ جی میل ایڈریس لکھیں" class="flex-1 rounded-xl border border-slate-300 px-3 py-1.5 text-xs font-mono-num text-left bg-white focus:border-emerald-600 focus:outline-none" />
-          <button id="btnVerifyGmailQuick" type="button" class="px-3.5 py-1.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white text-xs font-bold transition">
-            جی میل تصدیق کریں
+          <input id="inputQuickGmailVerify" type="email" dir="ltr" value="" placeholder="اپنا مجاز گوگل اکاؤنٹ لکھیں..." class="flex-1 rounded-xl border border-slate-300 px-3 py-1.5 text-xs font-mono-num text-left bg-white focus:border-emerald-600 focus:outline-none" />
+          <button id="btnVerifyGmailQuick" type="button" class="px-4 py-1.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white text-xs font-bold transition">
+            اکاؤنٹ لاگ ان / تصدیق
           </button>
         </div>
       </div>
@@ -323,10 +315,22 @@
     </section>
 
     <!-- TAB 1: Create / Edit Receipt & Live Official Receipt Preview -->
-    <section id="viewCreate" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    <section id="viewCreate" class="space-y-4">
 
-      <!-- Left/Right Column: Entry Form (Hidden when printing) -->
-      <div class="no-print lg:col-span-5 bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+      <!-- Mobile Segmented Tab: Form vs Live Receipt Card (Visible only on screens < lg) -->
+      <div id="mobileCreateTabNav" class="lg:hidden no-print flex items-center bg-emerald-950/10 p-1.5 rounded-2xl gap-1.5 border border-emerald-900/20">
+        <button id="btnMobileTabForm" type="button" class="flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold text-center transition bg-emerald-800 text-white shadow">
+          ✍️ رسید کا فارم
+        </button>
+        <button id="btnMobileTabPreview" type="button" class="flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold text-center transition text-slate-700 hover:bg-emerald-100">
+          📄 تیار شدہ رسید دیکھیں (<span id="mobilePreviewReceiptNoText">GM-...</span>)
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+        <!-- Left/Right Column: Entry Form (Hidden when printing) -->
+        <div id="containerFormColumn" class="no-print lg:col-span-5 bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
           <h2 id="formHeading" class="text-lg font-bold text-emerald-950">نئی رسید بنائیں</h2>
           <span id="editModeIndicator" class="hidden px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-900">
@@ -460,11 +464,29 @@
               نیا فارم
             </button>
           </div>
+
+          <!-- Quick Preview Switcher Button for Mobile -->
+          <div class="lg:hidden pt-1">
+            <button id="btnMobilePeekReceipt" type="button" class="w-full py-2.5 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold shadow transition flex items-center justify-center gap-1.5">
+              <span>📄</span>
+              <span>تیار شدہ رسید دیکھیں / پرنٹ و تصویر</span>
+              <span>⬅️</span>
+            </button>
+          </div>
         </form>
       </div>
 
       <!-- Right/Left Column: Official Receipt Card Preview (Matches Masjid_Receipt_GM-2026-1001.pdf Design) -->
-      <div class="lg:col-span-7 print-only-container space-y-4">
+      <div id="containerPreviewColumn" class="lg:col-span-7 print-only-container space-y-4 hidden lg:block">
+
+        <!-- Return to Form Button on Mobile -->
+        <div class="lg:hidden no-print">
+          <button id="btnMobileBackToForm" type="button" class="w-full py-2.5 px-4 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white text-xs font-bold shadow transition flex items-center justify-center gap-2">
+            <span>✍️</span>
+            <span>واپس رسید فارم پر جائیں (نئی رسید / ترمیم)</span>
+            <span>➡️</span>
+          </button>
+        </div>
         <div class="no-print flex flex-wrap items-center justify-between gap-2 bg-white px-4 py-3 rounded-2xl border border-slate-200 shadow-sm">
           <div class="flex items-center gap-2">
             <span class="text-xs font-bold text-slate-600">رسید سٹیٹس:</span>
@@ -914,29 +936,25 @@
 
   </main>
 
-  <!-- Writer Password & 2-Gmail Verification Modal (Section 4) -->
+  <!-- Writer Password Verification Modal (Section 4) -->
   <div id="passwordModal" data-testid="modal-password" class="hidden no-print fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl border-2 border-emerald-700 space-y-4">
       <div class="flex items-center justify-between">
-        <h3 class="text-base sm:text-lg font-bold text-emerald-950">🔒 منظور شدہ جی میل اور رائٹر پاسورڈ کی تصدیق</h3>
+        <h3 class="text-base sm:text-lg font-bold text-emerald-950">🔒 رائٹر پاسورڈ کی تصدیق</h3>
         <button id="btnClosePasswordModal" type="button" class="text-slate-500 hover:text-slate-800 text-sm font-bold">✕</button>
       </div>
       <p id="passwordModalPromptText" class="text-xs text-slate-700">
-        رسید بنانے یا تبدیلی کے لیے منظور شدہ جی میل اکاؤنٹ (مالک یا امام) اور رائٹر پاسورڈ دونوں ضروری ہیں۔
+        رسید بنانے اور ڈیٹا محفوظ کرنے کے لیے رائٹر پاسورڈ درج کریں۔ ایک بار پاسورڈ درج کرنے پر 30 منٹ کے لیے خودکار سیشن فعال رہے گا۔
       </p>
-      <div>
-        <label for="inputVerifyGmail" class="block text-xs font-bold text-slate-700 mb-1">منظور شدہ جی میل اکاؤنٹ (صرف 2 اجازت یافتہ اکاؤنٹس):</label>
-        <input id="inputVerifyGmail" type="email" dir="ltr" value="qamarattari49@gmail.com" placeholder="منظور شدہ جی میل لکھیں" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm font-mono-num text-left bg-slate-50 focus:bg-white focus:border-emerald-600 focus:outline-none" />
-        <div class="flex flex-wrap gap-1.5 mt-1.5">
-          <button id="btnModalSelectQamar" type="button" class="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-900 text-[11px] font-bold">امام اکاؤنٹ (qamar)</button>
-          <button id="btnModalSelectAtiq" type="button" class="px-2.5 py-1 rounded-lg bg-amber-100 text-amber-900 text-[11px] font-bold">مالک اکاؤنٹ (atiqg)</button>
-        </div>
+      <div id="modalActiveAccountNotice" class="p-2.5 rounded-xl bg-emerald-50 border border-emerald-300 text-xs font-bold text-emerald-950 flex items-center justify-between">
+        <span>مجاز اکاؤنٹ:</span>
+        <span id="modalActiveAccountName">مولانا محمد قمر (رسید ساز)</span>
       </div>
       <div>
-        <label for="inputWriterPassword" class="block text-xs font-bold text-slate-700 mb-1">رائٹر پاسورڈ لکھیں:</label>
+        <label for="inputWriterPassword" class="block text-xs font-bold text-slate-700 mb-1">رائٹر پاسورڈ درج کریں:</label>
         <input id="inputWriterPassword" data-testid="input-writer-password" type="password" placeholder="••••••••" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm font-mono-num text-left focus:border-emerald-600 focus:outline-none" />
         <p class="text-[11px] text-slate-500 mt-1">
-          صرف مجاز منتظمین ہی رائٹر پاسورڈ درج کر سکتے ہیں (5 بار غلط لکھنے پر اکاؤنٹ 15 منٹ کے لیے لاک ہو جائے گا)۔
+          پاسورڈ درج کرنے پر 30 منٹ کا سیشن چالو ہو جائے گا اور بار بار پاسورڈ نہیں مانگا جائے گا۔ (5 غلط کوششوں پر 15 منٹ لاک)۔
         </p>
       </div>
       <div id="passwordModalError" class="hidden text-xs font-bold text-rose-700 bg-rose-50 border border-rose-200 rounded-lg p-2.5"></div>
@@ -945,7 +963,7 @@
           منسوخ کریں
         </button>
         <button id="btnSubmitPassword" data-testid="btn-submit-password" type="button" class="px-5 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white text-xs font-bold">
-          تصدیق کریں
+          تصدیق کریں اور سیشن چلائیں
         </button>
       </div>
     </div>
@@ -985,7 +1003,7 @@
   </div>
 
   <!-- Sticky Mobile Bottom Navigation Bar (Visible on Phones < 768px) -->
-  <div id="mobileBottomNav" class="md:hidden no-print fixed bottom-0 left-0 right-0 z-40 bg-emerald-950 text-white border-t-2 border-amber-500 shadow-2xl grid grid-cols-4 gap-1 px-2 py-1.5">
+  <div id="mobileBottomNav" class="hidden no-print fixed bottom-0 left-0 right-0 z-40 bg-emerald-950 text-white border-t-2 border-amber-500 shadow-2xl grid grid-cols-4 gap-1 px-2 py-1.5">
     <button id="mobNavCreate" type="button" class="flex flex-col items-center justify-center py-1 rounded-xl bg-amber-500 text-slate-950 font-bold text-[11px]">
       <span class="text-base leading-none">📝</span>
       <span class="mt-0.5">نئی رسید</span>
@@ -1758,6 +1776,43 @@
       renderOfficialReceiptCard(draftReceipt);
     }
 
+    // Mobile View Switcher for Receipt Creation & Preview
+    function setMobileCreateView(viewName) {
+      const btnForm = document.getElementById('btnMobileTabForm');
+      const btnPreview = document.getElementById('btnMobileTabPreview');
+      const colForm = document.getElementById('containerFormColumn');
+      const colPreview = document.getElementById('containerPreviewColumn');
+      if (!btnForm || !btnPreview || !colForm || !colPreview) return;
+
+      if (viewName === 'preview') {
+        btnForm.className = 'flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold text-center transition text-slate-700 hover:bg-emerald-100';
+        btnPreview.className = 'flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold text-center transition bg-emerald-800 text-white shadow';
+        colForm.classList.add('hidden');
+        colForm.classList.remove('block');
+        colPreview.classList.remove('hidden');
+        colPreview.classList.add('block');
+        if (window.innerWidth < 1024) {
+          const cardEl = document.getElementById('officialReceiptCard');
+          if (cardEl && cardEl.scrollIntoView) {
+            cardEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+      } else {
+        btnForm.className = 'flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold text-center transition bg-emerald-800 text-white shadow';
+        btnPreview.className = 'flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold text-center transition text-slate-700 hover:bg-emerald-100';
+        colForm.classList.remove('hidden');
+        colForm.classList.add('block');
+        colPreview.classList.add('hidden');
+        colPreview.classList.remove('block');
+        if (window.innerWidth < 1024) {
+          const formEl = document.getElementById('containerFormColumn');
+          if (formEl && formEl.scrollIntoView) {
+            formEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+      }
+    }
+
     // Render Official Receipt Card Preview
     function renderOfficialReceiptCard(receipt) {
       if (!receipt) return;
@@ -1770,6 +1825,10 @@
         rNoEl.className = isSynced
           ? 'px-3.5 py-1 rounded-lg bg-emerald-50 border border-emerald-400 text-emerald-900 font-bold font-mono-num text-sm'
           : 'px-3.5 py-1 rounded-lg bg-amber-100 border border-amber-500 text-amber-950 font-bold text-sm';
+      }
+      const mobNoEl = document.getElementById('mobilePreviewReceiptNoText');
+      if (mobNoEl) {
+        mobNoEl.textContent = isSynced ? receipt.receipt_no : (receipt.temp_id || 'نیا');
       }
 
       const syncBadge = document.getElementById('previewSyncBadge');
@@ -2265,45 +2324,45 @@
       const amountWords = amountToUrduWords(amountVal);
       const isOffline = state.isOfflineSim || !navigator.onLine;
 
-      // OFFLINE CREATION: Save immediately to local queue with temp_id & "عارضی نمبر" (Section 6 & 12)
-      if (isOffline && !editReceiptNo) {
-        const nowIso = new Date().toISOString();
-        const tempId = 'TEMP-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
-        const offlineReceipt = {
-          receipt_no: '',
-          temp_id: tempId,
-          sync_status: 'saved_locally',
-          date_formatted: dateFormatted,
-          hijri_date: hijriDate,
-          donor_name: donorName,
-          donor_address: donorAddress,
-          donor_phone: donorPhone,
-          category: category,
-          amount_numeric: amountVal,
-          amount_words: amountWords,
-          payment_mode: paymentMode,
-          receiver_name: receiverName,
-          created_by_email: state.currentEmail,
-          created_at: '',
-          offline_created_at: nowIso,
-          device_id: state.deviceId,
-          updated_by_email: '',
-          updated_at: nowIso,
-          version: 1,
-          deleted: false
-        };
-        state.receipts.unshift(offlineReceipt);
-        state.receipts = sortAllReceiptsForDisplay(state.receipts);
-        saveReceiptsToLocalStorage();
-        renderOfficialReceiptCard(offlineReceipt);
-        renderReceiptsList();
-        showToast('آف لائن رسید "عارضی نمبر" کے ساتھ مقامی میموری (IndexedDB) میں محفوظ کر لی گئی۔', 'info');
-        return;
-      }
-
-      // ONLINE CREATE OR EDIT: Requires valid writer session (Section 4)
+      // Require 30-minute writer session for creating/editing receipts
       requireWriterSession(() => {
         const nowIso = new Date().toISOString();
+
+        // OFFLINE CREATION: Save immediately to local queue with temp_id & "عارضی نمبر" (Section 6 & 12)
+        if (isOffline && !editReceiptNo) {
+          const tempId = 'TEMP-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
+          const offlineReceipt = {
+            receipt_no: '',
+            temp_id: tempId,
+            sync_status: 'saved_locally',
+            date_formatted: dateFormatted,
+            hijri_date: hijriDate,
+            donor_name: donorName,
+            donor_address: donorAddress,
+            donor_phone: donorPhone,
+            category: category,
+            amount_numeric: amountVal,
+            amount_words: amountWords,
+            payment_mode: paymentMode,
+            receiver_name: receiverName,
+            created_by_email: state.currentEmail,
+            created_at: '',
+            offline_created_at: nowIso,
+            device_id: state.deviceId,
+            updated_by_email: '',
+            updated_at: nowIso,
+            version: 1,
+            deleted: false
+          };
+          state.receipts.unshift(offlineReceipt);
+          state.receipts = sortAllReceiptsForDisplay(state.receipts);
+          saveReceiptsToLocalStorage();
+          renderOfficialReceiptCard(offlineReceipt);
+          renderReceiptsList();
+          setMobileCreateView('preview');
+          showToast('آف لائن رسید "عارضی نمبر" کے ساتھ مقامی میموری میں محفوظ کر لی گئی۔', 'info');
+          return;
+        }
 
         if (editReceiptNo) {
           const existingIdx = state.receipts.findIndex((r) => r.receipt_no === editReceiptNo);
@@ -2340,6 +2399,7 @@
           document.getElementById('formHeading').textContent = 'نئی رسید بنائیں';
           renderOfficialReceiptCard(updated);
           renderReceiptsList();
+          setMobileCreateView('preview');
           showToast('رسید میں ترمیم کامیابی سے محفوظ ہو گئی۔', 'success');
         } else {
           const tempOnlineId = 'ONLINE-' + Date.now();
@@ -2396,11 +2456,8 @@
                 saveReceiptsToLocalStorage();
                 renderOfficialReceiptCard(created);
                 renderReceiptsList();
+                setMobileCreateView('preview');
                 showToast(`ماشاء اللہ! رسید گوگل شیٹ میں کامیابی سے محفوظ ہو گئی: ${created.receipt_no}`, 'success');
-                if (window.innerWidth < 768) {
-                  const cardEl = document.getElementById('officialReceiptCard');
-                  if (cardEl && cardEl.scrollIntoView) cardEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
                 pollLiveReceiptsFromServer(false);
               } else {
                 // Fallback: save locally as offline queue with temporary number
@@ -2411,11 +2468,8 @@
                 saveReceiptsToLocalStorage();
                 renderOfficialReceiptCard(created);
                 renderReceiptsList();
+                setMobileCreateView('preview');
                 showToast('سرور سے رابطہ نہ ہو سکا۔ رسید "عارضی نمبر" کے ساتھ آف لائن محفوظ کر لی گئی ہے۔ اوپر سنک سینٹر سے سنک کیجیے۔', 'warning');
-                if (window.innerWidth < 768) {
-                  const cardEl = document.getElementById('officialReceiptCard');
-                  if (cardEl && cardEl.scrollIntoView) cardEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
               }
             }
           );
@@ -2614,8 +2668,15 @@
         state.receipts[0].receiver_name = 'مولانا محمد قمر (امام و منتظم مسجد)';
       }
       loadReceiptsFromLocalStorage();
+      const savedRole = localStorage.getItem('masjid_user_role');
+      if (savedRole === 'dev') {
+        setAuthorizedGmailAccount('atiqgorayah@gmail.com');
+      } else {
+        setAuthorizedGmailAccount('qamarattari49@gmail.com');
+      }
       applyPakistanDateToForm(new Date(), false);
       updateLiveFormPreview();
+      updateRoleVisibility();
       pollLiveReceiptsFromServer(false);
 
       ['inputDonorName', 'inputDonorAddress', 'inputDonorPhone', 'selectCategory', 'inputCategoryDetail', 'selectPaymentMode', 'inputAmount', 'inputReceiver'].forEach((fieldId) => {
@@ -2683,7 +2744,42 @@
       document.getElementById('tabBtnBackup').addEventListener('click', () => switchTab('backup'));
       document.getElementById('tabBtnSettings').addEventListener('click', () => switchTab('settings'));
 
-      // Account Login Switchers — Strictly Enforce the 2 Allowed Gmail Accounts (Section 3)
+      // Update UI role visibility based on active authorized account
+      function updateRoleVisibility() {
+        const isDeveloper = state.currentEmail === 'atiqgorayah@gmail.com';
+        const isImam = state.currentEmail === 'qamarattari49@gmail.com';
+
+        // Developer-only elements (Settings tab, Backup tab, Sync Lab tab, Code.gs button, etc.)
+        document.querySelectorAll('.developer-only').forEach((el) => {
+          if (isDeveloper) {
+            el.classList.remove('hidden');
+          } else {
+            el.classList.add('hidden');
+          }
+        });
+
+        const devNotice = document.getElementById('developerNoticeBox');
+        if (devNotice) {
+          if (isDeveloper) {
+            devNotice.classList.remove('hidden');
+          } else {
+            devNotice.classList.add('hidden');
+          }
+        }
+
+        const modalNotice = document.getElementById('modalActiveAccountName');
+        if (modalNotice) {
+          if (isDeveloper) {
+            modalNotice.textContent = 'Atiq Goraya (ڈویلپر اکاؤنٹ)';
+          } else if (isImam) {
+            modalNotice.textContent = 'مولانا محمد قمر (رسید ساز)';
+          } else {
+            modalNotice.textContent = 'غیر تصدیق شدہ اکاؤنٹ';
+          }
+        }
+      }
+
+      // Account Login Switchers — Strictly Enforce the 2 Allowed Gmail Accounts without displaying emails
       function setAuthorizedGmailAccount(emailAddr) {
         const clean = String(emailAddr || '').trim().toLowerCase();
         if (!APP_CONFIG.ALLOWED_EMAILS.includes(clean)) {
@@ -2693,38 +2789,42 @@
           updateSessionBadgeUi();
           const badge = document.getElementById('currentUserBadge');
           if (badge) {
-            badge.textContent = 'غیر تصدیق شدہ (جی میل لاگ ان ضروری ہے)';
+            badge.textContent = 'غیر تصدیق شدہ (منظور شدہ اکاؤنٹ درج کریں)';
             badge.className = 'px-3 py-0.5 rounded-full text-xs font-bold bg-rose-100 text-rose-900 border border-rose-300';
           }
           document.getElementById('unauthorizedScreen').classList.remove('hidden');
           showToast(APP_CONFIG.MESSAGES.UNAUTHORIZED_ACCOUNT, 'error');
+          updateRoleVisibility();
           return false;
         }
+
         state.currentEmail = clean;
+        try {
+          localStorage.setItem('masjid_user_role', clean === 'atiqgorayah@gmail.com' ? 'dev' : 'imam');
+        } catch (e) {}
+
+        // Clear input box so email address is NOT left visible on screen
         const quickInput = document.getElementById('inputQuickGmailVerify');
-        if (quickInput) quickInput.value = clean;
-        const modalInput = document.getElementById('inputVerifyGmail');
-        if (modalInput) modalInput.value = clean;
+        if (quickInput) quickInput.value = '';
+
         document.getElementById('unauthorizedScreen').classList.add('hidden');
         document.getElementById('viewCreate').classList.remove('hidden');
         
         const badge = document.getElementById('currentUserBadge');
-        const devNotice = document.getElementById('developerNoticeBox');
         if (clean === 'atiqgorayah@gmail.com') {
           if (badge) {
-            badge.textContent = 'فعال صارف: Atiq Goraya (ڈویلپر و ایڈمن اکاؤنٹ)';
+            badge.textContent = 'فعال اکاؤنٹ: Atiq Goraya (ڈویلپر اکاؤنٹ)';
             badge.className = 'px-3 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-950 border border-amber-300';
           }
-          if (devNotice) devNotice.classList.remove('hidden');
-          showToast('ڈویلپر اکاؤنٹ (Atiq Goraya) فعال ہے۔ آپ تمام ترتیبات، کوڈ اور بیک اپ کنٹرول کر سکتے ہیں۔', 'info');
+          showToast('ڈویلپر اکاؤنٹ (Atiq Goraya) تصدیق ہو گیا! تمام ترتیبات اور کوڈ فعال ہو گئے۔', 'info');
         } else {
           if (badge) {
-            badge.textContent = 'فعال صارف: مولانا محمد قمر (مجاز برائے رسید سازی)';
+            badge.textContent = 'فعال اکاؤنٹ: مولانا محمد قمر (رسید ساز)';
             badge.className = 'px-3 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-900 border border-emerald-300';
           }
-          if (devNotice) devNotice.classList.add('hidden');
-          showToast('مولانا محمد قمر کا اکاؤنٹ فعال ہے (رسید سازی مجاز ہے)۔', 'success');
+          showToast('مولانا محمد قمر کا اکاؤنٹ تصدیق ہو گیا! رسید سازی فعال ہے۔', 'success');
         }
+        updateRoleVisibility();
         return true;
       }
 
@@ -2735,42 +2835,27 @@
         });
       }
 
-      document.getElementById('btnLoginAtiq').addEventListener('click', () => {
-        setAuthorizedGmailAccount('atiqgorayah@gmail.com');
-      });
-
-      document.getElementById('btnLoginQamar').addEventListener('click', () => {
-        setAuthorizedGmailAccount('qamarattari49@gmail.com');
-      });
-
-      document.getElementById('btnLoginUnlisted').addEventListener('click', () => {
-        setAuthorizedGmailAccount('unlisted_user@gmail.com');
-      });
-
-      document.getElementById('btnRecoverAuthorized').addEventListener('click', () => {
-        setAuthorizedGmailAccount('qamarattari49@gmail.com');
-      });
+      const btnRecoverAuth = document.getElementById('btnRecoverAuthorized');
+      if (btnRecoverAuth) {
+        btnRecoverAuth.addEventListener('click', () => {
+          setAuthorizedGmailAccount('qamarattari49@gmail.com');
+        });
+      }
 
       const btnVerifyQuick = document.getElementById('btnVerifyGmailQuick');
+      const inputQuick = document.getElementById('inputQuickGmailVerify');
       if (btnVerifyQuick) {
         btnVerifyQuick.addEventListener('click', () => {
-          const val = document.getElementById('inputQuickGmailVerify')?.value || '';
+          const val = inputQuick?.value || '';
           setAuthorizedGmailAccount(val);
         });
       }
-
-      const btnModalQamar = document.getElementById('btnModalSelectQamar');
-      if (btnModalQamar) {
-        btnModalQamar.addEventListener('click', () => {
-          const inp = document.getElementById('inputVerifyGmail');
-          if (inp) inp.value = 'qamarattari49@gmail.com';
-        });
-      }
-      const btnModalAtiq = document.getElementById('btnModalSelectAtiq');
-      if (btnModalAtiq) {
-        btnModalAtiq.addEventListener('click', () => {
-          const inp = document.getElementById('inputVerifyGmail');
-          if (inp) inp.value = 'atiqgorayah@gmail.com';
+      if (inputQuick) {
+        inputQuick.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            setAuthorizedGmailAccount(inputQuick.value);
+          }
         });
       }
 
@@ -2880,6 +2965,30 @@
         }
       });
 
+      // Mobile Create/Preview Tab Switchers
+      const mobTabForm = document.getElementById('btnMobileTabForm');
+      if (mobTabForm) mobTabForm.addEventListener('click', () => setMobileCreateView('form'));
+      const mobTabPreview = document.getElementById('btnMobileTabPreview');
+      if (mobTabPreview) mobTabPreview.addEventListener('click', () => setMobileCreateView('preview'));
+      const mobPeek = document.getElementById('btnMobilePeekReceipt');
+      if (mobPeek) mobPeek.addEventListener('click', () => setMobileCreateView('preview'));
+      const mobBack = document.getElementById('btnMobileBackToForm');
+      if (mobBack) mobBack.addEventListener('click', () => setMobileCreateView('form'));
+      const btnDismissBanner = document.getElementById('btnDismissInstallBanner');
+      if (btnDismissBanner) {
+        btnDismissBanner.addEventListener('click', () => {
+          const banner = document.getElementById('mobileInstallBanner');
+          if (banner) banner.classList.add('hidden');
+          try { localStorage.setItem('masjid_banner_dismissed', 'true'); } catch (e) {}
+        });
+      }
+      try {
+        if (localStorage.getItem('masjid_banner_dismissed') === 'true') {
+          const banner = document.getElementById('mobileInstallBanner');
+          if (banner) banner.classList.add('hidden');
+        }
+      } catch (e) {}
+
       // Sticky Mobile Bottom Navigation Bar Listeners
       const mobCreate = document.getElementById('mobNavCreate');
       if (mobCreate) mobCreate.addEventListener('click', () => switchTab('create'));
@@ -2943,8 +3052,9 @@
         document.getElementById('editModeIndicator').classList.add('hidden');
         document.getElementById('formHeading').textContent = 'نئی رسید بنائیں';
         document.getElementById('displayAmountWords').textContent = '—';
-        document.getElementById('inputReceiver').value = 'مولانا محمد قمر (امام و منتظم مسجد)';
+        document.getElementById('inputReceiver').value = 'مولانا محمد قمر (امام و منتظم مسجد — 03457814592)';
         applyPakistanDateToForm(new Date(), false);
+        setMobileCreateView('form');
       });
 
       // Save Receipt Image Button (User Request 3)
@@ -3012,7 +3122,9 @@
         if (action === 'view') {
           renderOfficialReceiptCard(target);
           switchTab('create');
+          setMobileCreateView('preview');
         } else if (action === 'edit') {
+          setMobileCreateView('form');
           document.getElementById('inputDonorName').value = target.donor_name;
           document.getElementById('inputDonorAddress').value = target.donor_address;
           document.getElementById('inputDonorPhone').value = target.donor_phone;
@@ -3180,7 +3292,7 @@
 
       document.getElementById('btnSaveSettings').addEventListener('click', () => {
         if (state.currentEmail !== 'atiqgorayah@gmail.com') {
-          showToast('ترتیبات تبدیل کرنے کا اختیار صرف ڈویلپر اکاؤنٹ (atiqgorayah@gmail.com) کے پاس ہے۔', 'error');
+          showToast('ترتیبات تبدیل کرنے کا اختیار صرف ڈویلپر اکاؤنٹ (Atiq Goraya) کے پاس ہے۔', 'error');
           return;
         }
         try {
