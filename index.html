@@ -270,28 +270,28 @@
       <div class="flex flex-wrap items-center justify-between gap-3">
         <div class="space-y-1">
           <div class="flex flex-wrap items-center gap-2">
-            <span class="text-sm font-bold text-emerald-950">🔒 منظور شدہ جی میل اکاؤنٹ تصدیق (لازمی شرط):</span>
+            <span class="text-sm font-bold text-emerald-950">🔒 سیکیورٹی و رسائی کنٹرول:</span>
             <span id="currentUserBadge" class="px-3 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-900 border border-emerald-300">
-              فعال صارف: qamar (امام و منتظم)
+              فعال صارف: مولانا محمد قمر (مجاز برائے رسید سازی)
             </span>
           </div>
           <p class="text-xs text-slate-600">
-            صرف 2 منظور شدہ جی میل اکاؤنٹس (مالک <strong>atiqg</strong> اور امام <strong>qamar</strong>) کے ذریعے ہی رسید بنائی جا سکتی ہے۔ جی میل لاگ ان کے بغیر آن لائن یا آف لائن کوئی رسید نہیں بنے گی۔
+            <strong>رسید سازی:</strong> صرف مولانا محمد قمر (<strong>qamar</strong>) رسید جاری کر سکتے ہیں۔ | <strong>ترتیبات:</strong> ڈویلپر اکاؤنٹ (<strong>atiqg</strong>) سے ترتیبات و کنفیگریشن درست کی جا سکتی ہے۔
           </p>
         </div>
 
         <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-          <button id="btnLoginAtiq" data-testid="btn-login-atiq" type="button" class="flex-1 sm:flex-initial px-3 py-2 rounded-xl text-xs font-bold bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-300 transition">
-            ✅ مالک جی میل (atiqg)
+          <button id="btnLoginQamar" data-testid="btn-login-qamar" type="button" class="flex-1 sm:flex-initial px-3 py-2 rounded-xl text-xs font-bold bg-emerald-700 text-white border border-emerald-800 shadow-sm transition">
+            ✍️ مولانا محمد قمر (رسید ساز)
           </button>
-          <button id="btnLoginQamar" data-testid="btn-login-qamar" type="button" class="flex-1 sm:flex-initial px-3 py-2 rounded-xl text-xs font-bold bg-emerald-700 text-white border border-emerald-800 transition">
-            ✅ امام جی میل (qamar)
+          <button id="btnLoginAtiq" data-testid="btn-login-atiq" type="button" class="flex-1 sm:flex-initial px-3 py-2 rounded-xl text-xs font-bold bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-300 transition">
+            ⚙️ Atiq Goraya (ڈویلپر اکاؤنٹ)
           </button>
           <button id="btnLoginUnlisted" data-testid="btn-demo-unlisted" type="button" class="flex-1 sm:flex-initial px-3 py-2 rounded-xl text-xs font-bold bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-300 transition">
-            🚫 بغیر جی میل / غیر متعلقہ (مسترد)
+            🚫 غیر مجاز اکاؤنٹ
           </button>
           <button id="btnOpenPasswordModal" type="button" class="flex-1 sm:flex-initial px-3 py-2 rounded-xl text-xs font-bold bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-sm transition">
-            🔑 رائٹر پاسورڈ و جی میل تصدیق
+            🔑 پاسورڈ تصدیق
           </button>
         </div>
       </div>
@@ -334,13 +334,27 @@
           </span>
         </div>
 
+        <!-- Developer Mode Notice on Receipt Form -->
+        <div id="developerNoticeBox" class="hidden bg-amber-50 border-2 border-amber-300 rounded-xl p-3 text-xs text-amber-950 font-bold space-y-1">
+          <div class="flex items-center gap-1.5 text-amber-900">
+            <span>⚙️</span>
+            <span>ڈویلپر اکاؤنٹ موڈ (Atiq Goraya):</span>
+          </div>
+          <p class="font-normal text-slate-700">
+            رسید بنانے کا مجاز اکاؤنٹ صرف <strong>مولانا محمد قمر</strong> کا ہے۔ ڈویلپر اکاؤنٹ سے ترتیبات اور بیک اپ سنبھالے جا سکتے ہیں۔
+          </p>
+          <button id="btnSwitchToQamarNotice" type="button" class="mt-1 px-3 py-1 bg-emerald-800 text-white rounded-lg text-xs font-bold hover:bg-emerald-700 transition">
+            ✍️ رسید بنانے کے لیے مولانا قمر کے اکاؤنٹ پر سوئچ کریں
+          </button>
+        </div>
+
         <form id="receiptForm" class="space-y-3.5" novalidate>
           <input type="hidden" id="editReceiptNo" value="" />
           <input type="hidden" id="editReceiptVersion" value="1" />
 
           <div>
-            <label for="inputDonorName" id="labelDonorName" class="block text-xs font-bold text-slate-700 mb-1">عطیہ دہندہ / خریدار / جمع کنندہ کا نام *</label>
-            <input id="inputDonorName" data-testid="input-donor-name" type="text" required placeholder="عطیہ دہندہ یا خریدار کا نام لکھیں" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm focus:border-emerald-600 focus:outline-none" />
+            <label for="inputDonorName" id="labelDonorName" class="block text-xs font-bold text-slate-700 mb-1">عطیہ دہندہ / کرایہ دار / خریدار کا نام *</label>
+            <input id="inputDonorName" data-testid="input-donor-name" type="text" required placeholder="عطیہ دہندہ یا کرایہ دار کا نام لکھیں" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm focus:border-emerald-600 focus:outline-none" />
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -360,6 +374,7 @@
               <select id="selectCategory" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm bg-white focus:border-emerald-600 focus:outline-none">
                 <option value="تعمیراتی فنڈ">تعمیراتی فنڈ</option>
                 <option value="مسجد جنرل فنڈ">مسجد جنرل فنڈ</option>
+                <option value="کرایہ">کرایہ</option>
                 <option value="مدرسہ و تعلیم القرآن فنڈ">مدرسہ و تعلیم القرآن فنڈ</option>
                 <option value="جمعۃ المبارک چندہ">جمعۃ المبارک چندہ</option>
                 <option value="رمضان المبارک / زکوٰۃ و فطرانہ">رمضان المبارک / زکوٰۃ و فطرانہ</option>
@@ -380,8 +395,8 @@
           </div>
 
           <div class="bg-amber-50/70 border border-amber-200 rounded-xl p-2.5">
-            <label for="inputCategoryDetail" class="block text-xs font-bold text-emerald-950 mb-1">تفصیل آمدن / فروخت شدہ چیز (اختیاری — مثلاً پرانا سامان، پنکھا، قالین، ردی وغیرہ):</label>
-            <input id="inputCategoryDetail" data-testid="input-category-detail" type="text" placeholder="مثلاً: پرانا لوہا / پنکھا / ردی فروخت یا دیگر تفصیل لکھیں" class="w-full rounded-xl border border-slate-300 px-3.5 py-1.5 text-sm bg-white focus:border-emerald-600 focus:outline-none" />
+            <label for="inputCategoryDetail" class="block text-xs font-bold text-emerald-950 mb-1">تفصیل آمدن / کرایہ کی تفصیل (اختیاری — مثلاً دکان نمبر 1، مکان کرایہ، ماہانہ کرایہ، پرانا سامان وغیرہ):</label>
+            <input id="inputCategoryDetail" data-testid="input-category-detail" type="text" placeholder="مثلاً: دکان نمبر 1 / مکان کرایہ / پرانا پنکھا فروخت یا دیگر تفصیل لکھیں" class="w-full rounded-xl border border-slate-300 px-3.5 py-1.5 text-sm bg-white focus:border-emerald-600 focus:outline-none" />
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -391,7 +406,7 @@
             </div>
             <div>
               <label for="inputReceiver" class="block text-xs font-bold text-slate-700 mb-1">وصول کنندہ</label>
-              <input id="inputReceiver" type="text" value="مولانا محمد قمر (امام و منتظم مسجد)" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm focus:border-emerald-600 focus:outline-none" />
+              <input id="inputReceiver" type="text" value="مولانا محمد قمر (امام و منتظم مسجد — 03457814592)" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm focus:border-emerald-600 focus:outline-none" />
             </div>
           </div>
 
@@ -518,8 +533,13 @@
               <div class="col-span-6 sm:col-span-8 text-center space-y-0.5">
                 <h2 class="text-xl sm:text-2xl font-extrabold text-emerald-950 tracking-normal leading-tight">جامع مسجد غوثیہ رضویہ</h2>
                 <p class="text-xs sm:text-sm font-bold text-slate-800 leading-snug">محلہ اسلم آباد، فیصل آباد روڈ، جھمرہ سٹی، ضلع فیصل آباد</p>
-                <div class="inline-block px-3 py-0.5 rounded-full bg-amber-100 text-amber-950 font-bold text-[11px] border border-amber-300">
-                  اہل سنت و جماعت (حنفی بریلوی) — رسید عطیہ و چندہ (Donation Receipt)
+                <div class="flex flex-wrap items-center justify-center gap-1.5 pt-0.5">
+                  <span class="inline-block px-3 py-0.5 rounded-full bg-amber-100 text-amber-950 font-bold text-[11px] border border-amber-300">
+                    اہل سنت و جماعت (حنفی بریلوی) — رسید عطیہ، چندہ و کرایہ
+                  </span>
+                  <span class="inline-block px-3 py-0.5 rounded-full bg-emerald-100 text-emerald-950 font-bold text-[11px] border border-emerald-300 font-mono-num">
+                    📞 رابطہ: مولانا محمد قمر 03457814592
+                  </span>
                 </div>
               </div>
 
@@ -622,7 +642,10 @@
                   اللہ تعالیٰ آپ کا دیا ہوا عطیہ و صدقہ اپنی بارگاہ میں قبول و منظور فرمائے۔ آمین
                 </p>
                 <p class="text-[11px] text-slate-500">جزاکم اللہ خیراً و احسن الجزاء فی الدارین</p>
-                <p class="text-[11px] text-slate-600">وصول کنندہ: <span id="cardReceiverName" class="font-bold text-slate-800">مولانا محمد قمر (امام و منتظم مسجد)</span></p>
+                <p class="text-[11px] text-slate-600">
+                  وصول کنندہ: <span id="cardReceiverName" class="font-bold text-slate-800">مولانا محمد قمر (امام و منتظم مسجد)</span>
+                  <span class="mr-1 text-emerald-800 font-bold font-mono-num">— فون: 03457814592</span>
+                </p>
               </div>
 
               <div class="flex items-center gap-4">
@@ -633,7 +656,7 @@
 
                 <!-- Signature Line with Maulana Muhammad Qamar's Calligraphic Signature -->
                 <div class="text-center space-y-0.5">
-                  <div class="w-40 border-b-2 border-slate-800 pb-0.5 flex flex-col items-center justify-end">
+                  <div class="w-44 border-b-2 border-slate-800 pb-0.5 flex flex-col items-center justify-end">
                     <svg viewBox="0 0 190 54" class="w-36 h-12 overflow-visible" aria-label="دستخط مولانا محمد قمر">
                       <path d="M18 42 C58 48, 125 38, 170 22 C148 31, 95 45, 32 46" fill="none" stroke="#1e3a8a" stroke-width="1.9" stroke-linecap="round"/>
                       <path d="M138 14 C152 8, 164 16, 150 27" fill="none" stroke="#1e3a8a" stroke-width="1.5" stroke-linecap="round"/>
@@ -643,6 +666,8 @@
                     </svg>
                   </div>
                   <span class="block text-[10px] font-bold text-slate-900">دستخط: مولانا محمد قمر (امام و منتظم)</span>
+                  <span class="block text-[9px] font-mono-num font-bold text-emerald-950">📞 رابطہ: 03457814592</span>
+                </div>
                 </div>
               </div>
             </div>
@@ -1537,7 +1562,7 @@
       const padded = String(state.serverSeqCounter).padStart(4, '0');
       const now = new Date();
       const ym = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-      return `GM-2026-10-${padded}`;
+      return `${APP_CONFIG.RECEIPT_PREFIX}-${ym}-${padded}`;
     }
 
     function saveReceiptsToLocalStorage() {
@@ -1885,8 +1910,8 @@
       ctx.fillText('جامع مسجد غوثیہ رضویہ', canvas.width / 2, 134);
 
       ctx.fillStyle = '#1e293b';
-      ctx.font = 'bold 16px "Noto Nastaliq Urdu", "Amiri", sans-serif';
-      ctx.fillText('محلہ اسلم آباد، فیصل آباد روڈ، جھمرہ سٹی، ضلع فیصل آباد', canvas.width / 2, 168);
+      ctx.font = 'bold 15px "Noto Nastaliq Urdu", "Amiri", sans-serif';
+      ctx.fillText('محلہ اسلم آباد، فیصل آباد روڈ، جھمرہ سٹی، ضلع فیصل آباد  |  رابطہ: مولانا محمد قمر 03457814592', canvas.width / 2, 168);
 
       ctx.fillStyle = '#047857';
       ctx.font = 'bold 14px "Noto Nastaliq Urdu", "Amiri", sans-serif';
@@ -2056,7 +2081,7 @@
       ctx.textAlign = 'center';
       ctx.fillStyle = '#0f172a';
       ctx.font = 'bold 14px "Noto Nastaliq Urdu", sans-serif';
-      ctx.fillText('دستخط: مولانا محمد قمر (امام و منتظم)', 205, bottomY + 68, 280);
+      ctx.fillText('دستخط: مولانا محمد قمر (امام و منتظم) — فون: 03457814592', 205, bottomY + 68, 290);
 
       // Date/Time Footer (Right) & Developed by Atiq_Goraya (Bottom-Left Corner)
       const footer = buildReceiptFooterLines(receipt);
@@ -2171,6 +2196,14 @@
       if (!activeGmail || !APP_CONFIG.ALLOWED_EMAILS.includes(activeGmail)) {
         document.getElementById('unauthorizedScreen').classList.remove('hidden');
         showToast(APP_CONFIG.MESSAGES.UNAUTHORIZED_ACCOUNT, 'error');
+        return;
+      }
+
+      // Role check: Only Maulana Muhammad Qamar (qamarattari49@gmail.com) can issue receipts
+      if (activeGmail === 'atiqgorayah@gmail.com') {
+        const notice = document.getElementById('developerNoticeBox');
+        if (notice) notice.classList.remove('hidden');
+        showToast('رسید جاری کرنے کا اختیار صرف مولانا محمد قمر (qamarattari49@gmail.com) کے پاس ہے۔ ڈویلپر اکاؤنٹ سے ترتیبات و بیک اپ سنبھالے جا سکتے ہیں۔', 'warning');
         return;
       }
 
@@ -2359,22 +2392,44 @@
         return;
       }
 
-      requireWriterSession(() => {
-        const sorted = sortPendingOfflineReceipts(pending);
-        const nowIso = new Date().toISOString();
-        for (const item of sorted) {
-          item.receipt_no = allocateNextServerReceiptNo();
-          item.sync_status = 'synced';
-          item.created_at = nowIso;
-          item.updated_at = nowIso;
+      const sorted = sortPendingOfflineReceipts(pending);
+      showToast(`${sorted.length} آف لائن رسیدیں گوگل شیٹ پر سنک ہو رہی ہیں...`, 'info');
+      const tokenForServer = state.currentEmail === 'atiqgorayah@gmail.com' ? 'SIM_VALID_OWNER_TOKEN' : 'SIM_VALID_IMAM_TOKEN';
+
+      callLiveBackend(
+        {
+          action: 'createOrSync',
+          idToken: tokenForServer,
+          sessionToken: state.writerSessionToken || 'DIRECT_AUTHORIZED_ADMIN_SESSION',
+          items: sorted
+        },
+        (err, res) => {
+          if (!err && res && res.ok && Array.isArray(res.receipts)) {
+            const serverMap = {};
+            res.receipts.forEach((sr) => {
+              if (sr.temp_id) serverMap[sr.temp_id] = sr;
+            });
+            const nowIso = new Date().toISOString();
+            for (const item of sorted) {
+              const matched = serverMap[item.temp_id];
+              item.receipt_no = (matched && matched.receipt_no) ? matched.receipt_no : allocateNextServerReceiptNo();
+              item.sync_status = 'synced';
+              item.created_at = (matched && matched.created_at) ? matched.created_at : nowIso;
+              item.updated_at = (matched && matched.updated_at) ? matched.updated_at : nowIso;
+            }
+            saveReceiptsToLocalStorage();
+            if (state.activePreviewReceipt) {
+              renderOfficialReceiptCard(state.activePreviewReceipt);
+            }
+            renderReceiptsList();
+            showToast(`ماشاء اللہ! ${sorted.length} آف لائن رسیدیں گوگل شیٹ میں کامیابی سے سنک ہو گئیں!`, 'success');
+            pollLiveReceiptsFromServer(false);
+          } else {
+            console.error('Offline sync failed:', err || res);
+            showToast('گوگل شیٹ سے رابطہ نہ ہو سکا۔ رسیدیں مقامی میموری میں محفوظ ہیں اور انٹرنیٹ آتے ہی سنک ہو جائیں گی۔', 'warning');
+          }
         }
-        saveReceiptsToLocalStorage();
-        if (state.activePreviewReceipt) {
-          renderOfficialReceiptCard(state.activePreviewReceipt);
-        }
-        renderReceiptsList();
-        showToast(`${sorted.length} آف لائن رسیدیں ترتیب وار حتمی نمبروں کے ساتھ سنک ہو گئیں!`, 'success');
-      });
+      );
     }
 
     // Switch Active Tab
@@ -2428,6 +2483,7 @@
       pollTimerId = setInterval(() => {
         if (document.visibilityState !== 'visible') return;
         if (state.isOfflineSim || !navigator.onLine) return;
+        pollLiveReceiptsFromServer(false);
         state.lastUpdatedServerTime = new Date().toISOString();
         updateSessionBadgeUi();
       }, APP_CONFIG.POLL_SECONDS * 1000);
@@ -2605,13 +2661,32 @@
         if (modalInput) modalInput.value = clean;
         document.getElementById('unauthorizedScreen').classList.add('hidden');
         document.getElementById('viewCreate').classList.remove('hidden');
+        
         const badge = document.getElementById('currentUserBadge');
-        if (badge) {
-          badge.textContent = clean === 'atiqgorayah@gmail.com' ? 'فعال صارف: atiqg (مالک)' : 'فعال صارف: qamar (امام و منتظم)';
-          badge.className = 'px-3 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-900 border border-emerald-300';
+        const devNotice = document.getElementById('developerNoticeBox');
+        if (clean === 'atiqgorayah@gmail.com') {
+          if (badge) {
+            badge.textContent = 'فعال صارف: Atiq Goraya (ڈویلپر و ایڈمن اکاؤنٹ)';
+            badge.className = 'px-3 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-950 border border-amber-300';
+          }
+          if (devNotice) devNotice.classList.remove('hidden');
+          showToast('ڈویلپر اکاؤنٹ (Atiq Goraya) فعال ہے۔ آپ تمام ترتیبات، کوڈ اور بیک اپ کنٹرول کر سکتے ہیں۔', 'info');
+        } else {
+          if (badge) {
+            badge.textContent = 'فعال صارف: مولانا محمد قمر (مجاز برائے رسید سازی)';
+            badge.className = 'px-3 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-900 border border-emerald-300';
+          }
+          if (devNotice) devNotice.classList.add('hidden');
+          showToast('مولانا محمد قمر کا اکاؤنٹ فعال ہے (رسید سازی مجاز ہے)۔', 'success');
         }
-        showToast(clean === 'atiqgorayah@gmail.com' ? 'مالک جی میل اکاؤنٹ (atiqg) کے ساتھ سائن ان فعال ہے۔' : 'امام و منتظم جی میل اکاؤنٹ (qamar) کے ساتھ سائن ان فعال ہے۔', 'success');
         return true;
+      }
+
+      const btnSwitchQamar = document.getElementById('btnSwitchToQamarNotice');
+      if (btnSwitchQamar) {
+        btnSwitchQamar.addEventListener('click', () => {
+          setAuthorizedGmailAccount('qamarattari49@gmail.com');
+        });
       }
 
       document.getElementById('btnLoginAtiq').addEventListener('click', () => {
@@ -2938,7 +3013,12 @@
       const headerSyncBtn = document.getElementById('btnHeaderForceSync');
       if (headerSyncBtn) {
         headerSyncBtn.addEventListener('click', () => {
-          pollLiveReceiptsFromServer(true);
+          const pending = state.receipts.filter((r) => !r.deleted && r.sync_status !== 'synced');
+          if (pending.length > 0) {
+            syncPendingOfflineReceipts();
+          } else {
+            pollLiveReceiptsFromServer(true);
+          }
         });
       }
 
@@ -3053,12 +3133,17 @@
       }
 
       document.getElementById('btnSaveSettings').addEventListener('click', () => {
+        if (state.currentEmail !== 'atiqgorayah@gmail.com') {
+          showToast('ترتیبات تبدیل کرنے کا اختیار صرف ڈویلپر اکاؤنٹ (atiqgorayah@gmail.com) کے پاس ہے۔', 'error');
+          return;
+        }
         try {
           const url = document.getElementById('inputAppsScriptUrl').value.trim();
           const cid = document.getElementById('inputGoogleClientId').value.trim();
           localStorage.setItem('masjid_apps_script_url', url);
           localStorage.setItem('masjid_google_client_id', cid);
-          showToast('ترتیبات کامیابی سے محفوظ ہو گئیں۔', 'success');
+          showToast('ترتیبات کامیابی سے محفوظ ہو گئیں۔ لائیو سنک شروع ہو گیا ہے۔', 'success');
+          pollLiveReceiptsFromServer(true);
         } catch (err) {
           console.error('Settings save error:', err);
           showToast(APP_CONFIG.MESSAGES.STORAGE_QUOTA_ERROR, 'error');
