@@ -219,8 +219,9 @@
         تمام رسیدیں (<span id="navReceiptCount">0</span>)
       </button>
       <button id="btnHeaderForceSync" type="button" class="px-3 py-1.5 rounded-lg text-xs md:text-sm font-bold bg-emerald-700 hover:bg-emerald-600 text-white border border-emerald-400 shadow-sm transition flex items-center gap-1.5">
-        <span>🔄</span>
+        <span id="headerSyncSpinner">🔄</span>
         <span>شیٹ سے لائیو سنک کریں</span>
+        <span id="headerPendingBadge" class="hidden px-2 py-0.5 rounded-full text-[11px] bg-amber-400 text-slate-950 font-bold font-mono-num animate-pulse">0</span>
       </button>
       <button id="tabBtnSyncLab" type="button" class="nav-tab-btn developer-only hidden px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-bold text-emerald-100 hover:bg-emerald-900 transition">
         آف لائن اور سنک سینٹر (<span id="navPendingCount">0</span>)
@@ -406,7 +407,17 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label for="inputAmount" class="block text-xs font-bold text-slate-700 mb-1">رقم ہندسوں میں (روپے) *</label>
-              <input id="inputAmount" data-testid="input-amount" type="number" min="1" step="any" required placeholder="5000" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-base font-bold font-mono-num text-right focus:border-emerald-600 focus:outline-none" />
+              <input id="inputAmount" data-testid="input-amount" type="number" inputmode="numeric" min="1" step="any" required placeholder="5000" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-base font-bold font-mono-num text-right focus:border-emerald-600 focus:outline-none" />
+              <!-- Quick Donation Amount Chips for Fast Mobile Entry -->
+              <div class="flex flex-wrap items-center gap-1.5 mt-2">
+                <span class="text-[11px] font-bold text-slate-500">فوری رقم:</span>
+                <button type="button" class="btn-quick-amount px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-lg text-xs font-bold font-mono-num transition active:scale-95" data-val="100">100</button>
+                <button type="button" class="btn-quick-amount px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-lg text-xs font-bold font-mono-num transition active:scale-95" data-val="500">500</button>
+                <button type="button" class="btn-quick-amount px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-lg text-xs font-bold font-mono-num transition active:scale-95" data-val="1000">1,000</button>
+                <button type="button" class="btn-quick-amount px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-lg text-xs font-bold font-mono-num transition active:scale-95" data-val="2000">2,000</button>
+                <button type="button" class="btn-quick-amount px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-lg text-xs font-bold font-mono-num transition active:scale-95" data-val="5000">5,000</button>
+                <button type="button" class="btn-quick-amount px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-lg text-xs font-bold font-mono-num transition active:scale-95" data-val="10000">10,000</button>
+              </div>
             </div>
             <div>
               <label for="inputReceiver" class="block text-xs font-bold text-slate-700 mb-1">وصول کنندہ</label>
@@ -514,6 +525,11 @@
             <button id="btnExportCsvQuick" data-testid="btn-export-csv" type="button" class="justify-center px-3 py-2.5 sm:py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition flex items-center gap-1">
               <span>📊</span>
               <span>CSV ڈاؤن لوڈ</span>
+            </button>
+            <!-- One-tap New Receipt Button from Preview on Mobile -->
+            <button id="btnNewReceiptFromPreview" type="button" class="col-span-2 sm:col-span-1 justify-center px-3 py-2.5 sm:py-1.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold shadow transition flex items-center gap-1.5">
+              <span>✍️</span>
+              <span>نئی رسید بنائیں</span>
             </button>
           </div>
         </div>
@@ -1588,7 +1604,20 @@
 
     // Allocate next final receipt number (GM-YYYY-MM-NNNN)
     function allocateNextServerReceiptNo() {
-      state.serverSeqCounter += 1;
+      let maxSeq = state.serverSeqCounter || 0;
+      if (Array.isArray(state.receipts)) {
+        for (const r of state.receipts) {
+          if (r.receipt_no && r.receipt_no.startsWith(APP_CONFIG.RECEIPT_PREFIX)) {
+            const parts = r.receipt_no.split('-');
+            const lastPart = parts[parts.length - 1];
+            const lastNum = parseInt(lastPart, 10);
+            if (!isNaN(lastNum) && lastNum > maxSeq) {
+              maxSeq = lastNum;
+            }
+          }
+        }
+      }
+      state.serverSeqCounter = maxSeq + 1;
       const padded = String(state.serverSeqCounter).padStart(4, '0');
       const now = new Date();
       const ym = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
@@ -1614,6 +1643,11 @@
         if (raw) {
           const parsed = JSON.parse(raw);
           if (Array.isArray(parsed) && parsed.length > 0) {
+            for (const r of parsed) {
+              if (!r.receipt_no || r.receipt_no === 'عارضی نمبر' || r.receipt_no.startsWith('TEMP-') || r.receipt_no.includes('عارضی')) {
+                r.receipt_no = allocateNextServerReceiptNo();
+              }
+            }
             state.receipts = sortAllReceiptsForDisplay(parsed);
             return true;
           }
@@ -1776,10 +1810,10 @@
       const dateFormatted = (document.getElementById('inputDateFormatted')?.value || '').trim();
       const hijriDate = (document.getElementById('inputHijriDate')?.value || '').trim();
       const editNo = (document.getElementById('editReceiptNo')?.value || '').trim();
-      const nextNo = editNo || `GM-2026-10-${String(state.serverSeqCounter + 1).padStart(4, '0')}`;
+      const nextNo = editNo || allocateNextServerReceiptNo();
 
       const draftReceipt = {
-        receipt_no: (state.isOfflineSim || !navigator.onLine) && !editNo ? '' : nextNo,
+        receipt_no: nextNo,
         temp_id: 'DRAFT-PREVIEW',
         sync_status: (state.isOfflineSim || !navigator.onLine) && !editNo ? 'saved_locally' : 'synced',
         date_formatted: dateFormatted,
@@ -1843,17 +1877,20 @@
       if (!receipt) return;
       state.activePreviewReceipt = receipt;
 
-      const isSynced = receipt.sync_status === 'synced' && receipt.receipt_no;
+      if (!receipt.receipt_no || receipt.receipt_no === 'عارضی نمبر' || receipt.receipt_no.includes('عارضی')) {
+        receipt.receipt_no = allocateNextServerReceiptNo();
+      }
+      const isSynced = receipt.sync_status === 'synced';
       const rNoEl = document.getElementById('cardReceiptNo');
       if (rNoEl) {
-        rNoEl.textContent = isSynced ? receipt.receipt_no : 'عارضی نمبر';
+        rNoEl.textContent = receipt.receipt_no;
         rNoEl.className = isSynced
           ? 'px-3.5 py-1 rounded-lg bg-emerald-50 border border-emerald-400 text-emerald-900 font-bold font-mono-num text-sm'
-          : 'px-3.5 py-1 rounded-lg bg-amber-100 border border-amber-500 text-amber-950 font-bold text-sm';
+          : 'px-3.5 py-1 rounded-lg bg-emerald-50 border border-amber-400 text-emerald-950 font-bold font-mono-num text-sm';
       }
       const mobNoEl = document.getElementById('mobilePreviewReceiptNoText');
       if (mobNoEl) {
-        mobNoEl.textContent = isSynced ? receipt.receipt_no : (receipt.temp_id || 'نیا');
+        mobNoEl.textContent = receipt.receipt_no;
       }
 
       const syncBadge = document.getElementById('previewSyncBadge');
@@ -1930,7 +1967,10 @@
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-slate-50 transition';
 
-        const rNoDisplay = r.sync_status === 'synced' && r.receipt_no ? r.receipt_no : 'عارضی نمبر';
+        if (!r.receipt_no || r.receipt_no === 'عارضی نمبر' || r.receipt_no.includes('عارضی')) {
+          r.receipt_no = allocateNextServerReceiptNo();
+        }
+        const rNoDisplay = r.receipt_no;
         const statusLabel =
           r.sync_status === 'saved_locally'
             ? 'محفوظ (مقامی)'
@@ -2043,8 +2083,10 @@
       ctx.lineTo(canvas.width - 40, 212);
       ctx.stroke();
 
-      const isSynced = receipt.sync_status === 'synced' && receipt.receipt_no;
-      const rNo = isSynced ? receipt.receipt_no : 'عارضی نمبر (آف لائن)';
+      if (!receipt.receipt_no || receipt.receipt_no.includes('عارضی')) {
+        receipt.receipt_no = allocateNextServerReceiptNo();
+      }
+      const rNo = receipt.receipt_no;
 
       ctx.fillStyle = '#064e3b';
       ctx.fillRect(810, 224, 340, 38);
@@ -2245,7 +2287,10 @@
           showToast('تصویر بنانے میں خرابی پیش آئی۔', 'error');
           return;
         }
-        const rNo = receipt.sync_status === 'synced' && receipt.receipt_no ? receipt.receipt_no : 'عارضی_رسید';
+        if (!receipt.receipt_no || receipt.receipt_no.includes('عارضی')) {
+          receipt.receipt_no = allocateNextServerReceiptNo();
+        }
+        const rNo = receipt.receipt_no;
         const filename = 'جامع_مسجد_غوثیہ_رضویہ_رسید_' + rNo + '.png';
         downloadBlobFile(blob, filename);
         showToast('رسید کی تصویر کامیابی سے محفوظ ہو گئی ہے: ' + filename, 'success');
@@ -2258,7 +2303,10 @@
         showToast('شیئر کرنے کے لیے کوئی رسید موجود نہیں ہے۔', 'error');
         return;
       }
-      const rNo = receipt.sync_status === 'synced' && receipt.receipt_no ? receipt.receipt_no : 'عارضی رسید';
+      if (!receipt.receipt_no || receipt.receipt_no.includes('عارضی')) {
+        receipt.receipt_no = allocateNextServerReceiptNo();
+      }
+      const rNo = receipt.receipt_no;
       const footer = buildReceiptFooterLines(receipt);
       const textMsg = [
         '*جامع مسجد غوثیہ رضویہ*',
@@ -2353,11 +2401,12 @@
       requireWriterSession(() => {
         const nowIso = new Date().toISOString();
 
-        // OFFLINE CREATION: Save immediately to local queue with temp_id & "عارضی نمبر" (Section 6 & 12)
+        // OFFLINE CREATION: Save immediately to local queue with automatic receipt number
         if (isOffline && !editReceiptNo) {
+          const autoNo = allocateNextServerReceiptNo();
           const tempId = 'TEMP-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
           const offlineReceipt = {
-            receipt_no: '',
+            receipt_no: autoNo,
             temp_id: tempId,
             sync_status: 'saved_locally',
             date_formatted: dateFormatted,
@@ -2371,7 +2420,7 @@
             payment_mode: paymentMode,
             receiver_name: receiverName,
             created_by_email: state.currentEmail,
-            created_at: '',
+            created_at: nowIso,
             offline_created_at: nowIso,
             device_id: state.deviceId,
             updated_by_email: '',
@@ -2385,7 +2434,7 @@
           renderOfficialReceiptCard(offlineReceipt);
           renderReceiptsList();
           setMobileCreateView('preview');
-          showToast('آف لائن رسید "عارضی نمبر" کے ساتھ مقامی میموری میں محفوظ کر لی گئی۔', 'info');
+          showToast(`ماشاء اللہ! رسید خودکار نمبر کے ساتھ محفوظ ہو گئی: ${autoNo}`, 'success');
           return;
         }
 
@@ -2427,9 +2476,10 @@
           setMobileCreateView('preview');
           showToast('رسید میں ترمیم کامیابی سے محفوظ ہو گئی۔', 'success');
         } else {
+          const autoNo = allocateNextServerReceiptNo();
           const tempOnlineId = 'ONLINE-' + Date.now();
           const created = {
-            receipt_no: '',
+            receipt_no: autoNo,
             temp_id: tempOnlineId,
             sync_status: 'waiting_sync',
             date_formatted: dateFormatted,
@@ -2452,6 +2502,9 @@
             deleted: false
           };
 
+          // Show receipt card immediately with the assigned auto number
+          renderOfficialReceiptCard(created);
+          setMobileCreateView('preview');
           showToast('رسید گوگل شیٹ پر محفوظ ہو رہی ہے...', 'info');
           const tokenForServer = state.currentEmail === 'atiqgorayah@gmail.com' ? 'SIM_VALID_OWNER_TOKEN' : 'SIM_VALID_IMAM_TOKEN';
 
@@ -2465,7 +2518,7 @@
             (err, res) => {
               if (!err && res && res.ok && Array.isArray(res.receipts) && res.receipts[0]) {
                 const serverRec = res.receipts[0];
-                created.receipt_no = serverRec.receipt_no || allocateNextServerReceiptNo();
+                created.receipt_no = serverRec.receipt_no || autoNo;
                 created.sync_status = 'synced';
                 created.created_at = serverRec.created_at || nowIso;
                 created.updated_at = serverRec.updated_at || nowIso;
@@ -2485,16 +2538,20 @@
                 showToast(`ماشاء اللہ! رسید گوگل شیٹ میں کامیابی سے محفوظ ہو گئی: ${created.receipt_no}`, 'success');
                 pollLiveReceiptsFromServer(false);
               } else {
-                // Fallback: save locally as offline queue with temporary number
-                created.receipt_no = '';
+                // Fallback: keep autoNo, mark as saved_locally
                 created.sync_status = 'saved_locally';
-                state.receipts.unshift(created);
+                const existingIdx = state.receipts.findIndex(r => (r.temp_id && r.temp_id === tempOnlineId) || (r.receipt_no && r.receipt_no === created.receipt_no));
+                if (existingIdx !== -1) {
+                  state.receipts[existingIdx] = created;
+                } else {
+                  state.receipts.unshift(created);
+                }
                 state.receipts = sortAllReceiptsForDisplay(state.receipts);
                 saveReceiptsToLocalStorage();
                 renderOfficialReceiptCard(created);
                 renderReceiptsList();
                 setMobileCreateView('preview');
-                showToast('سرور سے رابطہ نہ ہو سکا۔ رسید "عارضی نمبر" کے ساتھ آف لائن محفوظ کر لی گئی ہے۔ اوپر سنک سینٹر سے سنک کیجیے۔', 'warning');
+                showToast(`رسید خودکار نمبر (${created.receipt_no}) کے ساتھ محفوظ ہو گئی۔ شیٹ آن لائن ہوتے ہی سنک ہو جائے گی۔`, 'success');
               }
             }
           );
@@ -2530,7 +2587,7 @@
             const nowIso = new Date().toISOString();
             for (const item of sorted) {
               const matched = serverMap[item.temp_id];
-              item.receipt_no = (matched && matched.receipt_no) ? matched.receipt_no : allocateNextServerReceiptNo();
+              item.receipt_no = (matched && matched.receipt_no) ? matched.receipt_no : (item.receipt_no || allocateNextServerReceiptNo());
               item.sync_status = 'synced';
               item.created_at = (matched && matched.created_at) ? matched.created_at : nowIso;
               item.updated_at = (matched && matched.updated_at) ? matched.updated_at : nowIso;
@@ -2606,6 +2663,13 @@
       pollTimerId = setInterval(() => {
         if (document.visibilityState !== 'visible') return;
         if (state.isOfflineSim || !navigator.onLine) return;
+        
+        // Auto-push any pending offline receipts in background
+        const pending = state.receipts.filter((r) => !r.deleted && r.sync_status !== 'synced');
+        if (pending.length > 0) {
+          syncPendingOfflineReceipts();
+        }
+
         pollLiveReceiptsFromServer(false);
         state.lastUpdatedServerTime = new Date().toISOString();
         updateSessionBadgeUi();
@@ -3050,7 +3114,7 @@
           txt.textContent = 'آف لائن';
           badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-amber-600 text-white border border-amber-300 flex items-center gap-1.5';
           dot.className = 'w-2.5 h-2.5 rounded-full bg-amber-200 inline-block';
-          showToast('آف لائن موڈ فعال: اب بننے والی رسیدیں "عارضی نمبر" کے ساتھ IndexedDB میں محفوظ ہوں گی۔', 'info');
+          showToast('آف لائن موڈ فعال: رسیدیں باقاعدہ خودکار نمبر کے ساتھ محفوظ ہوں گی اور آن لائن ہوتے ہی سنک ہوں گی۔', 'info');
         } else {
           txt.textContent = 'آن لائن';
           badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-emerald-700 text-emerald-100 border border-emerald-400 flex items-center gap-1.5';
@@ -3190,6 +3254,66 @@
             renderReceiptsList();
             showToast(`رسید ${target.receipt_no || 'عارضی'} کو فہرست سے چھپا دیا گیا ہے (شیٹ میں ریکارڈ موجود رہے گا)۔`, 'info');
           });
+        }
+      });
+
+      // Quick Donation Amount Buttons for Mobile
+      document.querySelectorAll('.btn-quick-amount').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const val = btn.getAttribute('data-val');
+          const inputAmt = document.getElementById('inputAmount');
+          if (inputAmt) {
+            inputAmt.value = val;
+            inputAmt.dispatchEvent(new Event('input'));
+            updateLiveFormPreview();
+            if (navigator.vibrate) navigator.vibrate(25);
+          }
+        });
+      });
+
+      // One-tap New Receipt Button from Preview
+      const btnNewFromPrev = document.getElementById('btnNewReceiptFromPreview');
+      if (btnNewFromPrev) {
+        btnNewFromPrev.addEventListener('click', () => {
+          const resetBtn = document.getElementById('btnResetForm');
+          if (resetBtn) resetBtn.click();
+          setMobileCreateView('form');
+          if (navigator.vibrate) navigator.vibrate(25);
+        });
+      }
+
+      // Mobile Connectivity Resumption & Auto-Sync Listeners
+      window.addEventListener('online', () => {
+        state.isOfflineSim = false;
+        const txt = document.getElementById('connectionText');
+        const badge = document.getElementById('connectionBadge');
+        const dot = document.getElementById('connectionDot');
+        if (txt) txt.textContent = 'آن لائن';
+        if (badge) badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-emerald-700 text-emerald-100 border border-emerald-400 flex items-center gap-1.5';
+        if (dot) dot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-300 inline-block';
+        showToast('انٹرنیٹ کنکشن بحال: تمام رسیدیں گوگل شیٹ سے سنک ہو رہی ہیں...', 'success');
+        syncPendingOfflineReceipts();
+        pollLiveReceiptsFromServer(false);
+      });
+
+      window.addEventListener('offline', () => {
+        const txt = document.getElementById('connectionText');
+        const badge = document.getElementById('connectionBadge');
+        const dot = document.getElementById('connectionDot');
+        if (txt) txt.textContent = 'آف لائن';
+        if (badge) badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-amber-600 text-white border border-amber-300 flex items-center gap-1.5';
+        if (dot) dot.className = 'w-2.5 h-2.5 rounded-full bg-amber-200 inline-block';
+        showToast('آف لائن موڈ فعال: رسیدیں خودکار سیریل نمبر کے ساتھ محفوظ رہیں گی اور انٹرنیٹ بحال ہوتے ہی سنک ہوں گی۔', 'info');
+      });
+
+      // When tab becomes active or phone unlocked, immediately check sync
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+          const pending = state.receipts.filter((r) => !r.deleted && r.sync_status !== 'synced');
+          if (pending.length > 0) {
+            syncPendingOfflineReceipts();
+          }
+          pollLiveReceiptsFromServer(false);
         }
       });
 
