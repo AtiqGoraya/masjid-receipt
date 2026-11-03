@@ -172,7 +172,7 @@
       <!-- Right Side (RTL Start): ☰ مینیو Button on the extreme right + Mosque Title -->
       <div class="flex items-center gap-2.5 sm:gap-3">
         <!-- ☰ مینیو Button on the right -->
-        <button id="btnToggleSideMenu" type="button" class="px-3.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 active:scale-95 text-slate-950 font-black shadow-md border border-amber-200 transition flex items-center gap-1.5 cursor-pointer text-xs sm:text-sm">
+        <button id="btnToggleSideMenu" onclick="openSideMenu()" type="button" class="px-3.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 active:scale-95 text-slate-950 font-black shadow-md border border-amber-200 transition flex items-center gap-1.5 cursor-pointer text-xs sm:text-sm">
           <span class="text-base sm:text-lg">☰</span>
           <span>مینیو</span>
         </button>
@@ -258,8 +258,8 @@
   </header>
 
   <!-- Right-Side Slide Drawer Menu (دائیں طرف سلائیڈ مینو بار) -->
-  <div id="sideDrawerBackdrop" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs transition-opacity duration-300 cursor-pointer"></div>
-  <aside id="sideDrawerMenu" class="fixed top-0 right-0 bottom-0 z-55 w-80 max-w-[85vw] bg-slate-900 text-white shadow-2xl border-l-2 border-amber-400/60 translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-between overflow-y-auto">
+  <div id="sideDrawerBackdrop" onclick="closeSideMenu()" class="hidden fixed inset-0 bg-slate-950/70 backdrop-blur-xs transition-opacity duration-300 cursor-pointer" style="z-index: 99998; display: none;"></div>
+  <aside id="sideDrawerMenu" class="fixed top-0 right-0 bottom-0 w-80 max-w-[85vw] bg-slate-900 text-white shadow-2xl border-l-2 border-amber-400/60 translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-between overflow-y-auto" style="z-index: 99999; transform: translateX(100%);">
     <!-- Drawer Header -->
     <div class="p-4 border-b border-slate-800 bg-emerald-950 flex items-center justify-between">
       <div class="flex items-center gap-2.5">
@@ -269,7 +269,7 @@
           <p id="drawerUserBadge" class="text-[11px] text-emerald-200 mt-0.5">فعال صارف: qamar (امام و منتظم)</p>
         </div>
       </div>
-      <button id="btnCloseSideMenu" type="button" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center font-black transition cursor-pointer">✕</button>
+      <button id="btnCloseSideMenu" onclick="closeSideMenu()" type="button" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center font-black transition cursor-pointer">✕</button>
     </div>
 
     <!-- Navigation Items -->
@@ -325,6 +325,31 @@
       </div>
     </div>
   </aside>
+  <!-- Early Drawer Script to ensure Menu works instantly without waiting -->
+  <script>
+    function openSideMenu() {
+      var d = document.getElementById('sideDrawerMenu');
+      var b = document.getElementById('sideDrawerBackdrop');
+      if (b) { b.style.display = 'block'; b.classList.remove('hidden'); }
+      if (d) { d.classList.remove('translate-x-full'); d.style.transform = 'translateX(0)'; }
+    }
+    function closeSideMenu() {
+      var d = document.getElementById('sideDrawerMenu');
+      var b = document.getElementById('sideDrawerBackdrop');
+      if (d) { d.classList.add('translate-x-full'); d.style.transform = 'translateX(100%)'; }
+      if (b) { setTimeout(function(){ b.style.display = 'none'; b.classList.add('hidden'); }, 200); }
+    }
+    function navigateFromDrawer(tabName) {
+      closeSideMenu();
+      if (typeof switchTab === 'function') {
+        switchTab(tabName);
+      }
+    }
+    window.openSideMenu = openSideMenu;
+    window.closeSideMenu = closeSideMenu;
+    window.navigateFromDrawer = navigateFromDrawer;
+  </script>
+
 
 
   <!-- Main Content Container -->
@@ -552,7 +577,7 @@
             </div>
             <div>
               <label for="inputReceiver" class="block text-xs font-bold text-slate-700 mb-1">وصول کنندہ</label>
-              <input id="inputReceiver" type="text" value="مولانا محمد قمر (امام و منتظم مسجد)" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm focus:border-emerald-600 focus:outline-none" />
+              <input id="inputReceiver" type="text" value="مولانا محمد قمر (امام و منتظم — 0345-7814592)" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm focus:border-emerald-600 focus:outline-none" />
             </div>
           </div>
 
@@ -783,7 +808,7 @@
                   اللہ تعالیٰ آپ کا دیا ہوا عطیہ و صدقہ اپنی بارگاہ میں قبول و منظور فرمائے۔ آمین
                 </p>
                 <p class="text-[11px] text-slate-500">جزاکم اللہ خیراً و احسن الجزاء فی الدارین</p>
-                <p class="text-[11px] text-slate-600">وصول کنندہ: <span id="cardReceiverName" class="font-bold text-slate-800">مولانا محمد قمر (امام و منتظم مسجد)</span></p>
+                <p class="text-[11px] text-slate-600">وصول کنندہ: <span id="cardReceiverName" class="font-bold text-slate-800">مولانا محمد قمر (امام و منتظم — 0345-7814592)</span></p>
               </div>
 
               <div class="flex items-center gap-4">
@@ -803,7 +828,7 @@
                       <text x="95" y="32" text-anchor="middle" fill="#1e3a8a" font-family="'Amiri', 'Noto Nastaliq Urdu', serif" font-size="18" font-weight="bold" transform="rotate(-4 95 32)">مولانا محمد قمر</text>
                     </svg>
                   </div>
-                  <span class="block text-[10px] font-bold text-slate-900">دستخط: مولانا محمد قمر (امام و منتظم)</span>
+                  <span class="block text-[10px] font-bold text-slate-900">دستخط: مولانا محمد قمر (0345-7814592)</span>
                 </div>
               </div>
             </div>
@@ -916,7 +941,7 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label for="inputExpenseApprovedBy" class="block text-xs font-bold text-slate-700 mb-1">منظور کنندہ / ایڈمن</label>
-              <input id="inputExpenseApprovedBy" type="text" value="مولانا محمد قمر (امام و منتظم)" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm focus:border-rose-600 focus:outline-none" />
+              <input id="inputExpenseApprovedBy" type="text" value="مولانا محمد قمر (امام و منتظم — 0345-7814592)" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm focus:border-rose-600 focus:outline-none" />
             </div>
             <div>
               <label for="inputExpenseDateFormatted" class="block text-xs font-bold text-slate-700 mb-1">تاریخ واؤچر</label>
@@ -1045,7 +1070,7 @@
               </div>
               <div class="text-center space-y-1">
                 <div class="w-40 border-b-2 border-slate-700 pb-1">
-                  <span id="cardExpenseApprovedBy" class="text-[11px] font-bold text-slate-900">مولانا محمد قمر</span>
+                  <span id="cardExpenseApprovedBy" class="text-[11px] font-bold text-slate-900">مولانا محمد قمر (0345-7814592)</span>
                 </div>
                 <span class="block text-[10px] text-slate-500">دستخط ایڈمن / منتظم مسجد</span>
               </div>
@@ -2531,7 +2556,7 @@
       const category = categoryDetail ? `${baseCategory} (${categoryDetail})` : baseCategory;
       const paymentMode = document.getElementById('selectPaymentMode')?.value || 'نقد';
       const amountVal = Number(document.getElementById('inputAmount')?.value || 0);
-      const receiverName = (document.getElementById('inputReceiver')?.value || 'مولانا محمد قمر (امام و منتظم مسجد)').trim();
+      const receiverName = (document.getElementById('inputReceiver')?.value || 'مولانا محمد قمر (امام و منتظم — 0345-7814592)').trim();
       const dateFormatted = (document.getElementById('inputDateFormatted')?.value || '').trim();
       const hijriDate = (document.getElementById('inputHijriDate')?.value || '').trim();
       const editNo = (document.getElementById('editReceiptNo')?.value || '').trim();
@@ -2601,7 +2626,7 @@
       setTxt('cardCategory', receipt.category || 'تعمیراتی فنڈ');
       setTxt('cardPaymentMode', `طریقہ: ${receipt.payment_mode || 'نقد'}`);
       setTxt('cardAmountWords', receipt.amount_words || amountToUrduWords(receipt.amount_numeric));
-      setTxt('cardReceiverName', receipt.receiver_name || 'امام و منتظم مسجد');
+      setTxt('cardReceiverName', receipt.receiver_name || 'مولانا محمد قمر (امام و منتظم — 0345-7814592)');
       setTxt('cardAmountNumeric', Number(receipt.amount_numeric || 0).toLocaleString('en-US'));
 
       const footer = buildReceiptFooterLines(receipt);
@@ -2824,7 +2849,7 @@
       setTxt('cardExpenseDesc', expense.description || '—');
       setTxt('cardExpenseAmountWords', expense.amount_words || amountToUrduWords(expense.amount_numeric));
       setTxt('cardExpenseAmountNumeric', Number(expense.amount_numeric || 0).toLocaleString('en-US'));
-      setTxt('cardExpenseApprovedBy', expense.approved_by || 'مولانا محمد قمر');
+      setTxt('cardExpenseApprovedBy', expense.approved_by || 'مولانا محمد قمر (0345-7814592)');
 
       const dt = formatKarachiDateTime(expense.created_at || expense.offline_created_at);
       setTxt('cardExpenseFooterCreated', `بتاریخ ${dt.date}، وقت ${dt.time}`);
@@ -3548,7 +3573,7 @@
 
 شکریہ و جزاک اللہ خیراً!
 باہتمام: مولانا محمد قمر (امام و منتظم مسجد)
-رابطہ: 0300-1234567`;
+رابطہ فون: 0345-7814592`;
 
       const encoded = encodeURIComponent(text);
       const cleanPhone = (party.phone || '').replace(/[^0-9]/g, '');
@@ -3900,7 +3925,7 @@
 
 یہ رپورٹ کمیٹی و متولیان کے لیے ڈیجی کھاتہ کیش بک سسٹم سے جاری کی گئی ہے۔
 شکریہ!
-باہتمام: مولانا محمد قمر (امام و منتظم)`;
+باہتمام: مولانا محمد قمر (امام و منتظم — رابطہ: 0345-7814592)`;
 
       const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
       window.open(url, '_blank');
@@ -4372,6 +4397,9 @@
       ctx.fillStyle = '#475569';
       ctx.font = '13px "Noto Nastaliq Urdu", sans-serif';
       ctx.fillText('جزاکم اللہ خیراً و احسن الجزاء فی الدارین', gridX + gridW - 10, bottomY + 50);
+      ctx.fillStyle = '#0f172a';
+      ctx.font = 'bold 13px "Noto Nastaliq Urdu", sans-serif';
+      ctx.fillText('وصول کنندہ: ' + (receipt.receiver_name || 'مولانا محمد قمر') + ' (0345-7814592)', gridX + gridW - 10, bottomY + 70);
 
       ctx.strokeStyle = '#059669';
       ctx.lineWidth = 1.5;
@@ -4415,7 +4443,7 @@
       ctx.textAlign = 'center';
       ctx.fillStyle = '#0f172a';
       ctx.font = 'bold 14px "Noto Nastaliq Urdu", sans-serif';
-      ctx.fillText('دستخط: مولانا محمد قمر (امام و منتظم)', 205, bottomY + 68, 280);
+      ctx.fillText('دستخط: مولانا محمد قمر (0345-7814592)', 205, bottomY + 68, 280);
 
       // Date/Time Footer (Right) & Developed by Atiq_Goraya (Bottom-Left Corner)
       const footer = buildReceiptFooterLines(receipt);
@@ -4487,6 +4515,7 @@
         'مد / فنڈ: ' + receipt.category,
         'رقم: Rs. ' + Number(receipt.amount_numeric).toLocaleString('en-US') + ' (' + receipt.amount_words + ')',
         'ادائیگی: ' + receipt.payment_mode,
+        'وصول کنندہ: ' + (receipt.receiver_name || 'مولانا محمد قمر') + ' (0345-7814592)',
         footer.createdLine,
         '---------------------------------',
         'اللہ تعالیٰ آپ کا عطیہ قبول فرمائے۔ جزاکم اللہ خیراً',
@@ -4531,18 +4560,30 @@
     function openSideMenu() {
       const drawer = document.getElementById('sideDrawerMenu');
       const backdrop = document.getElementById('sideDrawerBackdrop');
-      if (drawer && backdrop) {
+      if (backdrop) {
+        backdrop.style.display = 'block';
         backdrop.classList.remove('hidden');
+      }
+      if (drawer) {
         drawer.classList.remove('translate-x-full');
+        drawer.style.transform = 'translateX(0)';
       }
     }
 
     function closeSideMenu() {
       const drawer = document.getElementById('sideDrawerMenu');
       const backdrop = document.getElementById('sideDrawerBackdrop');
-      if (drawer && backdrop) {
+      if (drawer) {
         drawer.classList.add('translate-x-full');
-        backdrop.classList.add('hidden');
+        drawer.style.transform = 'translateX(100%)';
+      }
+      if (backdrop) {
+        setTimeout(() => {
+          if (drawer && drawer.style.transform === 'translateX(100%)') {
+            backdrop.style.display = 'none';
+            backdrop.classList.add('hidden');
+          }
+        }, 200);
       }
     }
 
@@ -5038,7 +5079,7 @@
       document.getElementById('inputDonorAddress').value = 'محلہ اسلم آباد، جھمرہ سٹی';
       document.getElementById('inputDonorPhone').value = '';
       document.getElementById('displayAmountWords').textContent = '—';
-      state.receipts[0].receiver_name = 'مولانا محمد قمر (امام و منتظم مسجد)';
+      state.receipts[0].receiver_name = 'مولانا محمد قمر (امام و منتظم — 0345-7814592)';
       loadReceiptsFromLocalStorage();
       loadExpensesFromLocalStorage();
       const expDateEl = document.getElementById('inputExpenseDateFormatted');
@@ -5413,7 +5454,7 @@
         document.getElementById('editModeIndicator').classList.add('hidden');
         document.getElementById('formHeading').textContent = 'نئی رسید بنائیں';
         document.getElementById('displayAmountWords').textContent = '—';
-        document.getElementById('inputReceiver').value = 'مولانا محمد قمر (امام و منتظم مسجد)';
+        document.getElementById('inputReceiver').value = 'مولانا محمد قمر (امام و منتظم — 0345-7814592)';
         applyPakistanDateToForm(new Date(), false);
       });
 
