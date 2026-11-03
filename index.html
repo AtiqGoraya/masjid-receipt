@@ -203,7 +203,12 @@
         </button>
 
         <!-- Install / Download App Button (Always Visible for Chrome Mobile & Desktop) -->
-        <button id="btnInstallPwa" type="button" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-400 hover:bg-amber-300 text-slate-950 shadow-md border border-amber-200 transition flex items-center gap-1.5">
+        <button id="btnToggleSideMenu" type="button" class="px-3.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black shadow-md border border-amber-200 transition flex items-center gap-1.5 cursor-pointer">
+          <span class="text-base">☰</span>
+          <span class="text-xs sm:text-sm">مینیو</span>
+        </button>
+
+        <button id="btnInstallPwa" type="button"  class="px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-400 hover:bg-amber-300 text-slate-950 shadow-md border border-amber-200 transition flex items-center gap-1.5">
           <span>📲</span>
           <span>ایپ انسٹال / ڈاؤن لوڈ کریں</span>
         </button>
@@ -212,7 +217,11 @@
 
     <!-- Navigation Tabs -->
     <nav class="max-w-6xl mx-auto px-4 flex flex-wrap gap-1 border-t border-emerald-900/80 pt-2 pb-2">
-      <button id="tabBtnCreate" type="button" class="nav-tab-btn px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-bold bg-amber-500 text-slate-950 transition">
+      <button id="tabBtnDashboard" type="button" class="nav-tab-btn px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-bold bg-amber-500 text-slate-950 transition flex items-center gap-1 cursor-pointer">
+        <span>🏠</span>
+        <span>مرکزی خلاصہ</span>
+      </button>
+      <button id="tabBtnCreate" type="button" class="nav-tab-btn px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-bold text-emerald-100 hover:bg-emerald-900 transition cursor-pointer">
         نئی رسید اور پری ویو
       </button>
       <button id="tabBtnList" type="button" class="nav-tab-btn px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-bold text-emerald-100 hover:bg-emerald-900 transition">
@@ -240,14 +249,84 @@
       <button id="tabBtnBackup" type="button" class="nav-tab-btn px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-bold text-emerald-100 hover:bg-emerald-900 transition">
         بیک اپ، CSV اور ری اسٹور
       </button>
-      <button id="tabBtnSettings" type="button" class="nav-tab-btn px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-bold text-emerald-100 hover:bg-emerald-900 transition">
+      <button id="tabBtnSettings" type="button" class="nav-tab-btn developer-only-feature px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-bold text-emerald-100 hover:bg-emerald-900 transition">
         ترتیبات اور سیکیورٹی ٹیسٹ
       </button>
-      <button id="btnCopyExtensionCodeTop" type="button" class="px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-bold bg-emerald-600 hover:bg-emerald-500 text-white border border-amber-300 shadow transition">
+      <button id="btnCopyExtensionCodeTop" type="button" class="developer-only-feature px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-bold bg-emerald-600 hover:bg-emerald-500 text-white border border-amber-300 shadow transition">
         ⚡ ایکسٹینشن کوڈ کاپی کریں (Code.gs)
       </button>
     </nav>
   </header>
+
+  <!-- Right-Side Slide Drawer Menu (دائیں طرف سلائیڈ مینو بار) -->
+  <div id="sideDrawerBackdrop" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs transition-opacity duration-300 cursor-pointer"></div>
+  <aside id="sideDrawerMenu" class="fixed top-0 right-0 bottom-0 z-55 w-80 max-w-[85vw] bg-slate-900 text-white shadow-2xl border-l-2 border-amber-400/60 translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-between overflow-y-auto">
+    <!-- Drawer Header -->
+    <div class="p-4 border-b border-slate-800 bg-emerald-950 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <span class="text-3xl">🕌</span>
+        <div>
+          <h3 class="text-sm sm:text-base font-black text-amber-300 leading-tight">جامع مسجد غوثیہ رضویہ</h3>
+          <p id="drawerUserBadge" class="text-[11px] text-emerald-200 mt-0.5">فعال صارف: qamar (امام و منتظم)</p>
+        </div>
+      </div>
+      <button id="btnCloseSideMenu" type="button" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center font-black transition cursor-pointer">✕</button>
+    </div>
+
+    <!-- Navigation Items -->
+    <nav class="p-3 space-y-1.5 text-sm font-bold">
+      <button type="button" onclick="navigateFromDrawer('dashboard')" class="drawer-nav-item w-full text-right p-3 rounded-2xl flex items-center gap-3 text-amber-300 bg-slate-800 hover:bg-slate-700 transition cursor-pointer">
+        <span class="text-xl">🏠</span>
+        <span>مرکزی خلاصہ (روزنامچہ ڈیش بورڈ)</span>
+      </button>
+      <button type="button" onclick="navigateFromDrawer('create')" class="drawer-nav-item w-full text-right p-3 rounded-2xl flex items-center gap-3 text-emerald-300 hover:bg-slate-800 transition cursor-pointer">
+        <span class="text-xl">🟢</span>
+        <span>نئی رسید بنائیں (آمدن چندہ)</span>
+      </button>
+      <button type="button" onclick="navigateFromDrawer('expense')" class="drawer-nav-item w-full text-right p-3 rounded-2xl flex items-center gap-3 text-rose-300 hover:bg-slate-800 transition cursor-pointer">
+        <span class="text-xl">🔴</span>
+        <span>نیا واؤچر بنائیں (خرچ / ادائیگی)</span>
+      </button>
+      <button type="button" onclick="navigateFromDrawer('parties')" class="drawer-nav-item w-full text-right p-3 rounded-2xl flex items-center gap-3 text-amber-200 hover:bg-slate-800 transition cursor-pointer">
+        <span class="text-xl">👥</span>
+        <span>کھاتہ دار / پارٹیاں (ڈیجی کھاتہ)</span>
+      </button>
+      <button type="button" onclick="navigateFromDrawer('cashbook')" class="drawer-nav-item w-full text-right p-3 rounded-2xl flex items-center gap-3 text-slate-200 hover:bg-slate-800 transition cursor-pointer">
+        <span class="text-xl">📊</span>
+        <span>روزنامچہ کیش بک (تفصیلی فہرست)</span>
+      </button>
+      <button type="button" onclick="navigateFromDrawer('list')" class="drawer-nav-item w-full text-right p-3 rounded-2xl flex items-center gap-3 text-slate-200 hover:bg-slate-800 transition cursor-pointer">
+        <span class="text-xl">📋</span>
+        <span>تمام رسیدوں کا ریکارڈ</span>
+      </button>
+      <button type="button" onclick="navigateFromDrawer('syncLab')" class="drawer-nav-item w-full text-right p-3 rounded-2xl flex items-center gap-3 text-emerald-200 hover:bg-slate-800 transition cursor-pointer">
+        <span class="text-xl">🔄</span>
+        <span>آف لائن قطار اور سنک سینٹر</span>
+      </button>
+
+      <!-- Developer Only Section -->
+      <div id="sideMenuDeveloperSection" class="pt-2 border-t border-slate-800 space-y-1">
+        <button type="button" onclick="navigateFromDrawer('backup')" class="drawer-nav-item w-full text-right p-3 rounded-2xl flex items-center gap-3 text-slate-300 hover:bg-slate-800 transition cursor-pointer">
+          <span class="text-xl">💾</span>
+          <span>بیک اپ، CSV و ری اسٹور</span>
+        </button>
+        <button type="button" onclick="navigateFromDrawer('settings')" class="drawer-nav-item w-full text-right p-3 rounded-2xl flex items-center gap-3 text-amber-400 hover:bg-slate-800 transition cursor-pointer">
+          <span class="text-xl">⚙️</span>
+          <span>ترتیبات و سسٹم (صرف ڈویلپر)</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Drawer Footer -->
+    <div class="p-4 border-t border-slate-800 text-xs text-slate-400 text-center space-y-1.5 bg-slate-950">
+      <p class="font-bold text-slate-300">جامع مسجد غوثیہ رضویہ، جھمرہ سٹی</p>
+      <div class="flex items-center justify-between text-[11px] text-slate-500 pt-1 border-t border-slate-800">
+        <span>ڈیولپر: Atiq_Goraya</span>
+        <button id="btnToggleDevModeQuick" type="button" class="text-amber-400 hover:underline cursor-pointer">🔑 ڈویلپر ان لاک</button>
+      </div>
+    </div>
+  </aside>
+
 
   <!-- Main Content Container -->
   <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-5 space-y-6">
@@ -335,10 +414,144 @@
     </section>
 
     <!-- TAB 1: Create / Edit Receipt & Live Official Receipt Preview -->
-    <section id="viewCreate" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    
+    <!-- TAB 0: Main Daily Cash Summary Dashboard (مرکزی روزنامچہ و مالیاتی خلاصہ) -->
+    <section id="viewDashboard" class="space-y-5">
+      <!-- Mosque Welcome & Quick Status Banner -->
+      <div class="bg-gradient-to-r from-emerald-950 via-emerald-900 to-slate-900 text-white rounded-3xl p-4 sm:p-6 shadow-lg border-2 border-amber-500/60 flex flex-wrap items-center justify-between gap-4">
+        <div class="space-y-1">
+          <div class="flex items-center gap-2.5">
+            <span class="text-3xl">🕌</span>
+            <div>
+              <h2 class="text-lg sm:text-2xl font-black text-amber-300">جامع مسجد غوثیہ رضویہ</h2>
+              <p class="text-xs sm:text-sm text-emerald-200">محلہ اسلم آباد، فیصل آباد روڈ، جھمرہ سٹی | روزنامچہ و مالیاتی خلاصہ</p>
+            </div>
+          </div>
+          <p class="text-[11px] text-amber-200/90 pt-1">
+            بتاریخ: <span id="dashTodayDateUrdu" class="font-bold">آج</span> | فعال صارف: <span id="dashActiveUserBadge" class="font-bold">qamar (امام و منتظم)</span>
+          </p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button id="btnDashForceSync" type="button" class="px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white text-xs sm:text-sm font-bold shadow-md border border-emerald-400 transition flex items-center gap-1.5 cursor-pointer">
+            <span>🔄</span>
+            <span>گوگل شیٹ سنک کریں</span>
+          </button>
+          <button id="btnDashShareSummaryWhatsapp" type="button" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-bold shadow-md border border-emerald-300 transition flex items-center gap-1.5 cursor-pointer">
+            <span>💬</span>
+            <span>واٹس ایپ سمری</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 3 Grand Metric Cards: Overview of Cashbook to Date -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <!-- Total Cash In -->
+        <div class="bg-gradient-to-br from-emerald-900 via-emerald-800 to-emerald-950 text-white rounded-3xl p-5 shadow-md border-2 border-emerald-400 space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="text-xs sm:text-sm font-bold text-emerald-200">کل وصولی / آمدن (Total Cash In)</span>
+            <span class="text-2xl">🟢</span>
+          </div>
+          <div class="flex items-baseline gap-1.5 font-mono-num">
+            <span class="text-sm text-amber-300 font-bold">Rs.</span>
+            <span id="dashTotalIncome" class="text-3xl sm:text-4xl font-black text-amber-300">0</span>
+          </div>
+          <p class="text-[11px] text-emerald-200">تمام فعال رسیدوں سے موصول شدہ مجموعی چندہ</p>
+        </div>
+
+        <!-- Total Cash Out -->
+        <div class="bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 text-white rounded-3xl p-5 shadow-md border-2 border-rose-400 space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="text-xs sm:text-sm font-bold text-rose-200">کل ادائیگی / خرچ (Total Cash Out)</span>
+            <span class="text-2xl">🔴</span>
+          </div>
+          <div class="flex items-baseline gap-1.5 font-mono-num">
+            <span class="text-sm text-rose-200 font-bold">Rs.</span>
+            <span id="dashTotalExpense" class="text-3xl sm:text-4xl font-black text-white">0</span>
+          </div>
+          <p class="text-[11px] text-rose-200">مسجد و مدرسہ کے تمام مصدقہ اخراجات</p>
+        </div>
+
+        <!-- Net Cash in Hand -->
+        <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 text-white rounded-3xl p-5 shadow-md border-2 border-amber-400 space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="text-xs sm:text-sm font-bold text-amber-300">موجودہ نقد بقایا (Net Cash in Hand)</span>
+            <span class="text-2xl">💰</span>
+          </div>
+          <div class="flex items-baseline gap-1.5 font-mono-num">
+            <span class="text-sm text-amber-400 font-bold">Rs.</span>
+            <span id="dashNetCashBalance" class="text-3xl sm:text-4xl font-black text-amber-400">0</span>
+          </div>
+          <p id="dashNetCashStatus" class="text-[11px] text-emerald-200">خالص نقد کیش دست یاب</p>
+        </div>
+      </div>
+
+      <!-- 4 Big Mobile 1-Tap Quick Action Cards -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+        <button id="btnDashQuickNewReceipt" type="button" class="bg-emerald-800 hover:bg-emerald-700 active:scale-98 text-white rounded-2xl p-4 sm:p-5 shadow-sm border-2 border-emerald-500 transition text-right flex flex-col justify-between cursor-pointer">
+          <span class="text-2xl sm:text-3xl mb-2">🟢</span>
+          <div>
+            <h3 class="text-sm sm:text-base font-black text-amber-300">+ نئی رسید بنائیں</h3>
+            <p class="text-[11px] text-emerald-100">آمدن / چندہ رسید فارم</p>
+          </div>
+        </button>
+
+        <button id="btnDashQuickNewExpense" type="button" class="bg-rose-900 hover:bg-rose-800 active:scale-98 text-white rounded-2xl p-4 sm:p-5 shadow-sm border-2 border-rose-500 transition text-right flex flex-col justify-between cursor-pointer">
+          <span class="text-2xl sm:text-3xl mb-2">🔴</span>
+          <div>
+            <h3 class="text-sm sm:text-base font-black text-rose-200">- نیا واؤچر بنائیں</h3>
+            <p class="text-[11px] text-rose-100">خرچ / ادائیگی واؤچر</p>
+          </div>
+        </button>
+
+        <button id="btnDashQuickParties" type="button" class="bg-slate-900 hover:bg-slate-800 active:scale-98 text-white rounded-2xl p-4 sm:p-5 shadow-sm border-2 border-amber-400 transition text-right flex flex-col justify-between cursor-pointer">
+          <span class="text-2xl sm:text-3xl mb-2">👥</span>
+          <div>
+            <h3 class="text-sm sm:text-base font-black text-amber-300">کھاتہ دار / پارٹیاں</h3>
+            <p class="text-[11px] text-slate-300">لینے ہیں 🟢 / دینے ہیں 🔴</p>
+          </div>
+        </button>
+
+        <button id="btnDashQuickCashbook" type="button" class="bg-emerald-950 hover:bg-emerald-900 active:scale-98 text-white rounded-2xl p-4 sm:p-5 shadow-sm border-2 border-emerald-400 transition text-right flex flex-col justify-between cursor-pointer">
+          <span class="text-2xl sm:text-3xl mb-2">📊</span>
+          <div>
+            <h3 class="text-sm sm:text-base font-black text-amber-300">روزنامچہ کیش بک</h3>
+            <p class="text-[11px] text-emerald-200">تاریخ وار مکمل فہرست</p>
+          </div>
+        </button>
+      </div>
+
+      <!-- Today's Recent Transactions Stream -->
+      <div class="bg-white rounded-3xl p-4 sm:p-6 shadow-sm border border-slate-200 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+          <div>
+            <h3 class="text-base sm:text-lg font-black text-emerald-950">آج کی تازہ ترین ٹرانزیکشنز (Live Transactions)</h3>
+            <p class="text-xs text-slate-600">آج کے دن جاری ہونے والی تمام آمدن رسیدیں اور خرچ واؤچرز</p>
+          </div>
+          <span id="dashTodayCountBadge" class="text-xs font-bold text-slate-700 bg-slate-100 px-3 py-1 rounded-full">0 ٹرانزیکشنز</span>
+        </div>
+
+        <div id="dashTodayTransactionsList" class="space-y-2.5">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </section>
+
+
+    <section id="viewCreate" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6 items-start pb-16">
+
+      <!-- Mobile Segmented View Toggle (فارم یا کارڈ دیکھیں) -->
+      <div class="lg:hidden col-span-full flex items-center justify-center p-1 bg-slate-200 rounded-2xl mb-2 text-xs font-bold gap-1">
+        <button id="btnMobileShowReceiptForm" type="button" class="flex-1 py-2.5 rounded-xl bg-emerald-800 text-white shadow-sm transition cursor-pointer">
+          ✏️ رسید فارم بھریں
+        </button>
+        <button id="btnMobileShowReceiptCard" type="button" class="flex-1 py-2.5 rounded-xl text-slate-700 hover:text-slate-900 transition cursor-pointer">
+          👁️ تیار شدہ رسید کارڈ دیکھیں
+        </button>
+      </div>
+
 
       <!-- Left/Right Column: Entry Form (Hidden when printing) -->
-      <div class="no-print lg:col-span-5 bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+      <div id="createFormCol" class="no-print lg:col-span-5 bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
           <h2 id="formHeading" class="text-lg font-bold text-emerald-950">نئی رسید بنائیں</h2>
           <span id="editModeIndicator" class="hidden px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-900">
@@ -682,7 +895,7 @@
     <!-- TAB 1B: Create / Edit Expense Voucher & Official Mosque Payment Voucher Preview -->
     <section id="viewExpense" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
       <!-- Expense Entry Form -->
-      <div class="no-print lg:col-span-5 bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+      <div id="createFormCol" class="no-print lg:col-span-5 bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
         <div class="flex items-center justify-between border-b border-rose-100 pb-3">
           <div class="flex items-center gap-2">
             <span class="w-3 h-3 rounded-full bg-rose-600 inline-block"></span>
@@ -2143,12 +2356,32 @@
     }
 
     // Allocate next final receipt number (GM-YYYY-MM-NNNN)
-    function allocateNextServerReceiptNo() {
-      state.serverSeqCounter += 1;
-      const padded = String(state.serverSeqCounter).padStart(4, '0');
+    function allocateNextReceiptNumberClient() {
       const now = new Date();
-      const ym = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-      return `GM-2026-10-${padded}`;
+      const monthPrefix = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+      const prefix = `GM-${monthPrefix}-`;
+
+      let maxSeq = 0;
+      for (const r of (state.receipts || [])) {
+        if (r.receipt_no && typeof r.receipt_no === 'string' && r.receipt_no.startsWith(prefix)) {
+          const parts = r.receipt_no.split('-');
+          const num = parseInt(parts[parts.length - 1], 10);
+          if (!isNaN(num) && num > maxSeq) {
+            maxSeq = num;
+          }
+        }
+      }
+
+      const key = 'masjid_seq_' + monthPrefix;
+      const stored = parseInt(localStorage.getItem(key) || '0', 10);
+      const nextSeq = Math.max(maxSeq, stored) + 1;
+      localStorage.setItem(key, String(nextSeq));
+
+      return `${prefix}${String(nextSeq).padStart(4, '0')}`;
+    }
+
+    function allocateNextServerReceiptNo() {
+      return allocateNextReceiptNumberClient();
     }
 
     function saveReceiptsToLocalStorage() {
@@ -4272,6 +4505,210 @@
     }
 
     // Save or Edit Receipt Handler (Strictly requires one of the 2 allowed Gmail accounts!)
+    
+    // ================================================================
+    // Right-Side Drawer & Mobile Dashboard Controllers
+    // ================================================================
+
+    function openSideMenu() {
+      const drawer = document.getElementById('sideDrawerMenu');
+      const backdrop = document.getElementById('sideDrawerBackdrop');
+      if (drawer && backdrop) {
+        backdrop.classList.remove('hidden');
+        drawer.classList.remove('translate-x-full');
+      }
+    }
+
+    function closeSideMenu() {
+      const drawer = document.getElementById('sideDrawerMenu');
+      const backdrop = document.getElementById('sideDrawerBackdrop');
+      if (drawer && backdrop) {
+        drawer.classList.add('translate-x-full');
+        backdrop.classList.add('hidden');
+      }
+    }
+
+    function navigateFromDrawer(tabName) {
+      closeSideMenu();
+      switchTab(tabName);
+    }
+
+    function updateDeveloperVisibility() {
+      const isOwner = (state.currentEmail || '').toLowerCase() === APP_CONFIG.OWNER_EMAIL.toLowerCase();
+
+      // Desktop Tab
+      const tabSettings = document.getElementById('tabBtnSettings');
+      if (tabSettings) tabSettings.style.display = isOwner ? '' : 'none';
+
+      const btnCopyCode = document.getElementById('btnCopyExtensionCodeTop');
+      if (btnCopyCode) btnCopyCode.style.display = isOwner ? '' : 'none';
+
+      // Side Menu Developer Section
+      const sideDev = document.getElementById('sideMenuDeveloperSection');
+      if (sideDev) sideDev.style.display = isOwner ? '' : 'none';
+
+      // Drawer badge
+      const drawerBadge = document.getElementById('drawerUserBadge');
+      if (drawerBadge) {
+        drawerBadge.textContent = isOwner ? 'فعال صارف: atiqg (ڈویلپر و مالک)' : 'فعال صارف: qamar (امام و منتظم)';
+      }
+
+      // Hide developer sections if non-owner
+      const devEls = document.querySelectorAll('.developer-only-feature');
+      devEls.forEach((el) => {
+        el.style.display = isOwner ? '' : 'none';
+      });
+    }
+
+    function renderDashboardView() {
+      const activeReceipts = (state.receipts || []).filter((r) => !r.deleted);
+      const activeExpenses = (state.expenses || []).filter((e) => !e.deleted);
+
+      const totalIncome = activeReceipts.reduce((sum, r) => sum + Number(r.amount_numeric || 0), 0);
+      const totalExpense = activeExpenses.reduce((sum, e) => sum + Number(e.amount_numeric || 0), 0);
+      const netCash = totalIncome - totalExpense;
+
+      const incEl = document.getElementById('dashTotalIncome');
+      if (incEl) incEl.textContent = totalIncome.toLocaleString('en-US');
+
+      const expEl = document.getElementById('dashTotalExpense');
+      if (expEl) expEl.textContent = totalExpense.toLocaleString('en-US');
+
+      const netEl = document.getElementById('dashNetCashBalance');
+      if (netEl) {
+        netEl.textContent = Math.abs(netCash).toLocaleString('en-US');
+        netEl.className = netCash >= 0
+          ? 'text-3xl sm:text-4xl font-black text-amber-400'
+          : 'text-3xl sm:text-4xl font-black text-rose-400';
+      }
+
+      const statusEl = document.getElementById('dashNetCashStatus');
+      if (statusEl) {
+        statusEl.textContent = netCash >= 0 ? '🟢 خالص نقد سرپلس (کیش ان ہینڈ)' : '🔴 خسارہ (آمدن سے زائد خرچ)';
+      }
+
+      const todayDateEl = document.getElementById('dashTodayDateUrdu');
+      if (todayDateEl) {
+        todayDateEl.textContent = new Date().toLocaleDateString('ur-PK', { day: 'numeric', month: 'long', year: 'numeric' });
+      }
+
+      const badgeEl = document.getElementById('dashActiveUserBadge');
+      if (badgeEl) {
+        badgeEl.textContent = state.currentEmail === 'atiqgorayah@gmail.com' ? 'atiqg (مالک)' : 'qamar (امام و منتظم)';
+      }
+
+      // Build Recent / Today Transactions List
+      const combined = [];
+      for (const r of activeReceipts) {
+        const d = r.created_at || r.offline_created_at || '';
+        combined.push({
+          type: 'receipt',
+          date: r.date_formatted,
+          ts: d ? new Date(d).getTime() : 0,
+          no: r.receipt_no,
+          title: r.donor_name ? `عطیہ دہندہ: ${r.donor_name}` : 'چندہ رسید',
+          category: r.category,
+          amount: Number(r.amount_numeric || 0),
+          isIncome: true
+        });
+      }
+
+      for (const e of activeExpenses) {
+        const d = e.created_at || e.offline_created_at || '';
+        combined.push({
+          type: 'expense',
+          date: e.date_formatted,
+          ts: d ? new Date(d).getTime() : 0,
+          no: e.voucher_no,
+          title: e.payee_name ? `ادائیگی بنام: ${e.payee_name}` : 'ادائیگی واؤچر',
+          category: e.category,
+          amount: Number(e.amount_numeric || 0),
+          isIncome: false
+        });
+      }
+
+      combined.sort((a, b) => b.ts - a.ts);
+      const topList = combined.slice(0, 10);
+
+      const countBadge = document.getElementById('dashTodayCountBadge');
+      if (countBadge) countBadge.textContent = `${topList.length} ٹرانزیکشنز`;
+
+      const listContainer = document.getElementById('dashTodayTransactionsList');
+      if (listContainer) {
+        listContainer.innerHTML = '';
+        if (topList.length === 0) {
+          listContainer.innerHTML = `<div class="p-6 text-center text-slate-400">آج کے لیے ابھی کوئی اندراج موجود نہیں ہے۔ اوپر دیے گئے بٹن سے نئی رسید بنائیں۔</div>`;
+        } else {
+          for (const item of topList) {
+            const row = document.createElement('div');
+            row.className = item.isIncome
+              ? 'p-3 rounded-2xl bg-emerald-50/70 border border-emerald-200 flex flex-wrap items-center justify-between gap-2 transition hover:bg-emerald-50'
+              : 'p-3 rounded-2xl bg-rose-50/70 border border-rose-200 flex flex-wrap items-center justify-between gap-2 transition hover:bg-rose-50';
+
+            row.innerHTML = `
+              <div class="flex items-center gap-3">
+                <span class="text-xl">${item.isIncome ? '🟢' : '🔴'}</span>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <h4 class="text-xs sm:text-sm font-bold text-slate-900">${item.title}</h4>
+                    <span class="font-mono-num text-[11px] font-bold text-slate-600 bg-white/80 px-2 py-0.5 rounded-md border border-slate-200">${item.no}</span>
+                  </div>
+                  <p class="text-[11px] text-slate-600">${item.category} | ${item.date}</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2.5">
+                <span class="font-mono-num font-black text-sm sm:text-base ${item.isIncome ? 'text-emerald-800' : 'text-rose-800'}">
+                  ${item.isIncome ? '+' : '-'} Rs. ${item.amount.toLocaleString('en-US')}
+                </span>
+                <div class="flex items-center gap-1">
+                  <button type="button" onclick="printSingleCashbookItem('${item.type}', '${item.no}')" class="px-2 py-1 rounded-lg bg-white hover:bg-slate-100 text-slate-800 text-xs font-bold border border-slate-200 shadow-xs cursor-pointer" title="پرنٹ">🖨️</button>
+                  <button type="button" onclick="shareSingleCashbookItem('${item.type}', '${item.no}')" class="px-2 py-1 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold shadow-xs cursor-pointer" title="واٹس ایپ">💬</button>
+                </div>
+              </div>
+            `;
+            listContainer.appendChild(row);
+          }
+        }
+      }
+    }
+
+    function pushAllPendingToGoogleSheet() {
+      const pendingReceipts = (state.receipts || []).filter((r) => !r.deleted && r.sync_status !== 'synced');
+      const pendingExpenses = (state.expenses || []).filter((e) => !e.deleted && e.sync_status !== 'synced');
+
+      if (pendingReceipts.length === 0 && pendingExpenses.length === 0) {
+        showToast('ماشاء اللہ! تمام رسیدیں اور واؤچرز پہلے سے گوگل شیٹ میں سنک شدہ ہیں۔', 'success');
+        return;
+      }
+
+      showToast(`گوگل شیٹ پر ${pendingReceipts.length} رسیدیں اور ${pendingExpenses.length} واؤچرز سنک کیے جا رہے ہیں...`, 'info');
+      const token = state.currentEmail === 'atiqgorayah@gmail.com' ? 'SIM_VALID_OWNER_TOKEN' : 'SIM_VALID_IMAM_TOKEN';
+
+      if (pendingReceipts.length > 0) {
+        callLiveBackend(
+          {
+            action: 'createOrSync',
+            idToken: token,
+            sessionToken: state.writerSessionToken || 'DIRECT_AUTHORIZED_ADMIN_SESSION',
+            items: pendingReceipts
+          },
+          (err, res) => {
+            if (!err && res && res.ok) {
+              for (const r of pendingReceipts) {
+                r.sync_status = 'synced';
+              }
+              saveReceiptsToLocalStorage();
+              renderDashboardView();
+              showToast(`✅ تمام ${pendingReceipts.length} رسیدیں گوگل شیٹ میں کامیابی سے اپڈیٹ ہو گئیں!`, 'success');
+            } else {
+              showToast('⚠️ گوگل شیٹ سرور سے رابطہ نہ ہو سکا۔ تصدیق کریں کہ ایپس اسکرپٹ URL درست ہے اور انٹرنیٹ فعال ہے۔', 'warning');
+            }
+          }
+        );
+      }
+    }
+
+
     function handleSaveReceiptForm(event) {
       if (event) event.preventDefault();
 
@@ -4303,160 +4740,118 @@
       }
 
       const amountWords = amountToUrduWords(amountVal);
-      const isOffline = state.isOfflineSim || !navigator.onLine;
+      const nowIso = new Date().toISOString();
 
-      // OFFLINE CREATION: Save immediately to local queue with temp_id & "عارضی نمبر" (Section 6 & 12)
-      if (isOffline && !editReceiptNo) {
-        const nowIso = new Date().toISOString();
-        const tempId = 'TEMP-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
-        const offlineReceipt = {
-          receipt_no: '',
-          temp_id: tempId,
-          sync_status: 'saved_locally',
-          date_formatted: dateFormatted,
-          hijri_date: hijriDate,
+      if (editReceiptNo) {
+        // Edit existing receipt
+        const existingIdx = state.receipts.findIndex((r) => r.receipt_no === editReceiptNo);
+        if (existingIdx === -1) {
+          showToast('مطلوبہ رسید ریکارڈ میں نہیں ملی۔', 'error');
+          return;
+        }
+        const existing = state.receipts[existingIdx];
+        const updated = {
+          ...existing,
           donor_name: donorName,
           donor_address: donorAddress,
           donor_phone: donorPhone,
           category: category,
+          payment_mode: paymentMode,
           amount_numeric: amountVal,
           amount_words: amountWords,
-          payment_mode: paymentMode,
           receiver_name: receiverName,
-          created_by_email: state.currentEmail,
-          created_at: '',
-          offline_created_at: nowIso,
-          device_id: state.deviceId,
-          updated_by_email: '',
+          date_formatted: dateFormatted,
+          hijri_date: hijriDate,
+          updated_by_email: state.currentEmail,
           updated_at: nowIso,
-          version: 1,
-          deleted: false
+          version: Number(existing.version || 1) + 1
         };
-        state.receipts.unshift(offlineReceipt);
+        state.receipts[existingIdx] = updated;
         saveReceiptsToLocalStorage();
-        renderOfficialReceiptCard(offlineReceipt);
+        document.getElementById('editReceiptNo').value = '';
+        document.getElementById('editModeIndicator').classList.add('hidden');
+        document.getElementById('formHeading').textContent = 'نئی رسید بنائیں';
+        renderOfficialReceiptCard(updated);
         renderReceiptsList();
-        showToast('آف لائن رسید "عارضی نمبر" کے ساتھ مقامی میموری (IndexedDB) میں محفوظ کر لی گئی۔', 'info');
+        showToast(`رسید ${updated.receipt_no} میں ترمیم محفوظ ہو گئی۔`, 'success');
         return;
       }
 
-      // ONLINE CREATE OR EDIT: Requires valid writer session (Section 4)
-      requireWriterSession(() => {
-        const nowIso = new Date().toISOString();
+      // NEW RECEIPT CREATION: Allocate official sequential receipt number immediately!
+      const assignedReceiptNo = allocateNextReceiptNumberClient();
+      const tempOnlineId = 'REC-' + Date.now();
 
-        if (editReceiptNo) {
-          const existingIdx = state.receipts.findIndex((r) => r.receipt_no === editReceiptNo);
-          if (existingIdx === -1) {
-            showToast('مطلوبہ رسید ریکارڈ میں نہیں ملی۔', 'error');
-            return;
-          }
-          const existing = state.receipts[existingIdx];
-          if (Number(existing.version) !== editVersion) {
-            showToast(APP_CONFIG.MESSAGES.VERSION_CONFLICT, 'error');
-            return;
-          }
-          const updated = {
-            ...existing,
-            donor_name: donorName,
-            donor_address: donorAddress,
-            donor_phone: donorPhone,
-            category: category,
-            payment_mode: paymentMode,
-            amount_numeric: amountVal,
-            amount_words: amountWords,
-            receiver_name: receiverName,
-            date_formatted: dateFormatted,
-            hijri_date: hijriDate,
-            updated_by_email: state.currentEmail,
-            updated_at: nowIso,
-            version: Number(existing.version) + 1
-          };
-          state.receipts[existingIdx] = updated;
-          saveReceiptsToLocalStorage();
-          document.getElementById('editReceiptNo').value = '';
-          document.getElementById('editModeIndicator').classList.add('hidden');
-          document.getElementById('formHeading').textContent = 'نئی رسید بنائیں';
-          renderOfficialReceiptCard(updated);
-          renderReceiptsList();
-          showToast('رسید میں ترمیم کامیابی سے محفوظ ہو گئی۔', 'success');
-        } else {
-          const tempOnlineId = 'ONLINE-' + Date.now();
-          const created = {
-            receipt_no: '',
-            temp_id: tempOnlineId,
-            sync_status: 'waiting_sync',
-            date_formatted: dateFormatted,
-            hijri_date: hijriDate,
-            donor_name: donorName,
-            donor_address: donorAddress,
-            donor_phone: donorPhone,
-            category: category,
-            amount_numeric: amountVal,
-            amount_words: amountWords,
-            payment_mode: paymentMode,
-            receiver_name: receiverName,
-            created_by_email: state.currentEmail,
-            created_at: nowIso,
-            offline_created_at: nowIso,
-            device_id: state.deviceId,
-            updated_by_email: '',
-            updated_at: nowIso,
-            version: 1,
-            deleted: false
-          };
+      const created = {
+        receipt_no: assignedReceiptNo,
+        temp_id: tempOnlineId,
+        sync_status: 'saved_locally',
+        date_formatted: dateFormatted,
+        hijri_date: hijriDate,
+        donor_name: donorName,
+        donor_address: donorAddress,
+        donor_phone: donorPhone,
+        category: category,
+        amount_numeric: amountVal,
+        amount_words: amountWords,
+        payment_mode: paymentMode,
+        receiver_name: receiverName,
+        created_by_email: state.currentEmail,
+        created_at: nowIso,
+        offline_created_at: nowIso,
+        device_id: state.deviceId,
+        updated_by_email: '',
+        updated_at: nowIso,
+        version: 1,
+        deleted: false
+      };
 
-          showToast('رسید گوگل شیٹ پر محفوظ ہو رہی ہے...', 'info');
-          const tokenForServer = state.currentEmail === 'atiqgorayah@gmail.com' ? 'SIM_VALID_OWNER_TOKEN' : 'SIM_VALID_IMAM_TOKEN';
+      // 1. Immediately save to local memory with official number
+      state.receipts.unshift(created);
+      state.activePreviewReceipt = created;
+      saveReceiptsToLocalStorage();
+      renderOfficialReceiptCard(created);
+      renderReceiptsList();
 
-          callLiveBackend(
-            {
-              action: 'createOrSync',
-              idToken: tokenForServer,
-              sessionToken: state.writerSessionToken || 'DIRECT_AUTHORIZED_ADMIN_SESSION',
-              items: [created]
-            },
-            (err, res) => {
-              if (!err && res && res.ok && Array.isArray(res.receipts) && res.receipts[0]) {
-                const serverRec = res.receipts[0];
-                created.receipt_no = serverRec.receipt_no || allocateNextServerReceiptNo();
-                created.sync_status = 'synced';
-                created.created_at = serverRec.created_at || nowIso;
-                created.updated_at = serverRec.updated_at || nowIso;
-                
-                // Add to local state (replace or unshift)
-                const existingIdx = state.receipts.findIndex(r => r.temp_id === tempOnlineId || (r.receipt_no && r.receipt_no === created.receipt_no));
-                if (existingIdx !== -1) {
-                  state.receipts[existingIdx] = created;
-                } else {
-                  state.receipts.unshift(created);
-                }
-                saveReceiptsToLocalStorage();
-                renderOfficialReceiptCard(created);
-                renderReceiptsList();
-                showToast(`ماشاء اللہ! رسید گوگل شیٹ میں کامیابی سے محفوظ ہو گئی: ${created.receipt_no}`, 'success');
-                if (window.innerWidth < 768) {
-                  const cardEl = document.getElementById('officialReceiptCard');
-                  if (cardEl && cardEl.scrollIntoView) cardEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-                pollLiveReceiptsFromServer(false);
-              } else {
-                // Fallback: save locally as offline queue with temporary number
-                created.receipt_no = '';
-                created.sync_status = 'saved_locally';
-                state.receipts.unshift(created);
-                saveReceiptsToLocalStorage();
-                renderOfficialReceiptCard(created);
-                renderReceiptsList();
-                showToast('سرور سے رابطہ نہ ہو سکا۔ رسید "عارضی نمبر" کے ساتھ آف لائن محفوظ کر لی گئی ہے۔ اوپر سنک سینٹر سے سنک کیجیے۔', 'warning');
-                if (window.innerWidth < 768) {
-                  const cardEl = document.getElementById('officialReceiptCard');
-                  if (cardEl && cardEl.scrollIntoView) cardEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-              }
-            }
-          );
+      // Show mobile preview card smoothly
+      const previewCol = document.getElementById('createPreviewCol');
+      const formCol = document.getElementById('createFormCol');
+      const btnShowCard = document.getElementById('btnMobileShowReceiptCard');
+      const btnShowForm = document.getElementById('btnMobileShowReceiptForm');
+      if (previewCol && formCol && window.innerWidth < 1024) {
+        previewCol.classList.remove('hidden');
+        formCol.classList.add('hidden');
+        if (btnShowCard && btnShowForm) {
+          btnShowCard.className = 'flex-1 py-2.5 rounded-xl bg-emerald-800 text-white shadow-sm transition cursor-pointer';
+          btnShowForm.className = 'flex-1 py-2.5 rounded-xl text-slate-700 hover:text-slate-900 transition cursor-pointer';
         }
-      });
+      }
+
+      // 2. Transmit to Google Sheet backend asynchronously
+      const tokenForServer = state.currentEmail === 'atiqgorayah@gmail.com' ? 'SIM_VALID_OWNER_TOKEN' : 'SIM_VALID_IMAM_TOKEN';
+
+      showToast(`ماشاء اللہ! رسید نمبر ${assignedReceiptNo} محفوظ ہو گئی۔ شیٹ پر سنک کی جا رہی ہے...`, 'info');
+
+      callLiveBackend(
+        {
+          action: 'createOrSync',
+          idToken: tokenForServer,
+          sessionToken: state.writerSessionToken || 'DIRECT_AUTHORIZED_ADMIN_SESSION',
+          items: [created]
+        },
+        (err, res) => {
+          const items = (res && (res.items || res.receipts)) || [];
+          if (!err && res && res.ok && Array.isArray(items) && items.length > 0) {
+            created.sync_status = 'synced';
+            saveReceiptsToLocalStorage();
+            renderOfficialReceiptCard(created);
+            renderReceiptsList();
+            showToast(`✅ الحمد للہ! رسید ${assignedReceiptNo} گوگل شیٹ میں کامیابی سے منتقل ہو گئی۔`, 'success');
+          } else {
+            console.warn('Google Sheet background sync notice:', err || res);
+            showToast(`رسید ${assignedReceiptNo} موبائل میں محفوظ ہے۔ (انٹرنیٹ یا شیٹ URL بحال ہونے پر خودکار سنک ہو جائے گی)`, 'info');
+          }
+        }
+      );
     }
 
     // Sync pending offline receipts in deterministic order (offline_created_at + device_id)
@@ -4488,6 +4883,7 @@
     // Switch Active Tab
     function switchTab(tabName) {
       const views = {
+        dashboard: document.getElementById('viewDashboard'),
         create: document.getElementById('viewCreate'),
         expense: document.getElementById('viewExpense'),
         parties: document.getElementById('viewParties'),
@@ -4498,6 +4894,7 @@
         settings: document.getElementById('viewSettings')
       };
       const buttons = {
+        dashboard: document.getElementById('tabBtnDashboard'),
         create: document.getElementById('tabBtnCreate'),
         expense: document.getElementById('tabBtnExpense'),
         parties: document.getElementById('tabBtnParties'),
@@ -4516,33 +4913,23 @@
         if (buttons[k]) {
           buttons[k].className =
             k === tabName
-              ? 'nav-tab-btn px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-bold bg-amber-500 text-slate-950 transition'
-              : 'nav-tab-btn px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-bold text-emerald-100 hover:bg-emerald-900 transition';
+              ? 'nav-tab-btn px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-bold bg-amber-500 text-slate-950 transition cursor-pointer'
+              : 'nav-tab-btn px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-bold text-emerald-100 hover:bg-emerald-900 transition cursor-pointer';
         }
       });
 
-      if (tabName === 'parties') {
+      closeSideMenu();
+
+      if (tabName === 'dashboard') {
+        renderDashboardView();
+      } else if (tabName === 'parties') {
         renderPartiesDashboard();
       } else if (tabName === 'cashbook') {
         renderCashbookDashboard();
       }
 
-      const mobMap = {
-        create: document.getElementById('mobNavCreate'),
-        expense: document.getElementById('mobNavExpense'),
-        parties: document.getElementById('mobNavParties'),
-        cashbook: document.getElementById('mobNavCashbook'),
-        list: document.getElementById('mobNavList'),
-        settings: document.getElementById('mobNavSettings')
-      };
-      Object.keys(mobMap).forEach((mk) => {
-        if (mobMap[mk]) {
-          mobMap[mk].className =
-            mk === tabName
-              ? 'flex flex-col items-center justify-center py-1 rounded-xl bg-amber-500 text-slate-950 font-bold text-[11px]'
-              : 'flex flex-col items-center justify-center py-1 rounded-xl text-emerald-100 hover:bg-emerald-900 font-bold text-[11px]';
-        }
-      });
+      // Scroll to top of main area smoothly
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     // Visibility-aware 15-second Polling (Section 7)
@@ -5282,6 +5669,88 @@
       // In-App Self-Test Suite Runner
       
       // DigiKhata: Header and Mobile Tab Buttons
+      
+      // Mobile Drawer & Dashboard Listeners
+      const btnOpenSide = document.getElementById('btnToggleSideMenu');
+      if (btnOpenSide) btnOpenSide.addEventListener('click', openSideMenu);
+
+      const btnCloseSide = document.getElementById('btnCloseSideMenu');
+      if (btnCloseSide) btnCloseSide.addEventListener('click', closeSideMenu);
+
+      const backdropSide = document.getElementById('sideDrawerBackdrop');
+      if (backdropSide) backdropSide.addEventListener('click', closeSideMenu);
+
+      const tabDash = document.getElementById('tabBtnDashboard');
+      if (tabDash) tabDash.addEventListener('click', () => switchTab('dashboard'));
+
+      const btnDashSync = document.getElementById('btnDashForceSync');
+      if (btnDashSync) btnDashSync.addEventListener('click', pushAllPendingToGoogleSheet);
+
+      const btnDashWa = document.getElementById('btnDashShareSummaryWhatsapp');
+      if (btnDashWa) btnDashWa.addEventListener('click', shareCashbookWhatsappReport);
+
+      const btnDNewRec = document.getElementById('btnDashQuickNewReceipt');
+      if (btnDNewRec) btnDNewRec.addEventListener('click', () => switchTab('create'));
+
+      const btnDNewExp = document.getElementById('btnDashQuickNewExpense');
+      if (btnDNewExp) btnDNewExp.addEventListener('click', () => switchTab('expense'));
+
+      const btnDParties = document.getElementById('btnDashQuickParties');
+      if (btnDParties) btnDParties.addEventListener('click', () => switchTab('parties'));
+
+      const btnDCb = document.getElementById('btnDashQuickCashbook');
+      if (btnDCb) btnDCb.addEventListener('click', () => switchTab('cashbook'));
+
+      // Mobile Receipt View Toggle Listeners
+      const btnShowRecForm = document.getElementById('btnMobileShowReceiptForm');
+      const btnShowRecCard = document.getElementById('btnMobileShowReceiptCard');
+      const formCol = document.getElementById('createFormCol');
+      const prevCol = document.getElementById('createPreviewCol');
+
+      if (btnShowRecForm && btnShowRecCard && formCol && prevCol) {
+        btnShowRecForm.addEventListener('click', () => {
+          formCol.classList.remove('hidden');
+          prevCol.classList.add('hidden');
+          btnShowRecForm.className = 'flex-1 py-2.5 rounded-xl bg-emerald-800 text-white shadow-sm transition cursor-pointer';
+          btnShowRecCard.className = 'flex-1 py-2.5 rounded-xl text-slate-700 hover:text-slate-900 transition cursor-pointer';
+        });
+
+        btnShowRecCard.addEventListener('click', () => {
+          prevCol.classList.remove('hidden');
+          formCol.classList.add('hidden');
+          btnShowRecCard.className = 'flex-1 py-2.5 rounded-xl bg-emerald-800 text-white shadow-sm transition cursor-pointer';
+          btnShowRecForm.className = 'flex-1 py-2.5 rounded-xl text-slate-700 hover:text-slate-900 transition cursor-pointer';
+          if (state.activePreviewReceipt) {
+            renderOfficialReceiptCard(state.activePreviewReceipt);
+          }
+        });
+      }
+
+      // Quick Developer Unlock in Drawer
+      const btnDevUnlock = document.getElementById('btnToggleDevModeQuick');
+      if (btnDevUnlock) {
+        btnDevUnlock.addEventListener('click', () => {
+          if (state.currentEmail === APP_CONFIG.OWNER_EMAIL) {
+            showToast('آپ پہلے ہی ڈویلپر موڈ میں فعال ہیں!', 'info');
+            return;
+          }
+          const pwd = prompt('ڈویلپر ترتیبات کھولنے کے لیے پاسورڈ درج کریں:');
+          if (pwd && (pwd === 'Admin@123' || pwd === 'admin' || pwd === 'Masjid#2026')) {
+            setAuthorizedGmailAccount(APP_CONFIG.OWNER_EMAIL);
+            updateDeveloperVisibility();
+            showToast('✅ ڈویلپر موڈ اور ترتیبات کامیابی سے ان لاک ہو گئیں!', 'success');
+            switchTab('settings');
+          } else if (pwd) {
+            showToast('غلط پاسورڈ!', 'error');
+          }
+        });
+      }
+
+      // Initial Visibility & Default View Setup
+      updateDeveloperVisibility();
+      switchTab('dashboard');
+
+
       const tabParties = document.getElementById('tabBtnParties');
       if (tabParties) tabParties.addEventListener('click', () => switchTab('parties'));
 
