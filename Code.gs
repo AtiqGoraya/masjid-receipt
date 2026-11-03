@@ -768,6 +768,7 @@ function handleCreateOrSyncReceipts(idToken, sessionToken, items, options) {
     return {
       ok: true,
       receipts: savedReceipts,
+      items: savedReceipts,
       serverTime: nowIso,
       message: 'رسیدیں کامیابی کے ساتھ سرور پر محفوظ ہو گئیں۔'
     };
@@ -1208,7 +1209,8 @@ function handleCreateOrSyncExpenses(idToken, sessionToken, items, options) {
       item.sync_status = 'synced';
       results.push(item);
     }
-    return { ok: true, items: results, syncedAt: pkDates.iso };
+    return { ok: true, items: results,
+      expenses: results, syncedAt: pkDates.iso };
   } finally {
     lock.releaseLock();
   }
