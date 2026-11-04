@@ -391,11 +391,11 @@
           </p>
         </div>
         <div class="flex flex-wrap items-center gap-2">
-          <button id="btnDashForceSync" type="button" class="px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white text-xs sm:text-sm font-bold shadow-md border border-emerald-400 transition flex items-center gap-1.5 cursor-pointer">
+          <button id="btnDashForceSync" onclick="pushAllPendingToGoogleSheet()" type="button" class="px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white text-xs sm:text-sm font-bold shadow-md border border-emerald-400 transition flex items-center gap-1.5 cursor-pointer">
             <span>🔄</span>
             <span>گوگل شیٹ سنک کریں</span>
           </button>
-          <button id="btnDashShareSummaryWhatsapp" type="button" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-bold shadow-md border border-emerald-300 transition flex items-center gap-1.5 cursor-pointer">
+          <button id="btnDashShareSummaryWhatsapp" onclick="shareCashbookWhatsappReport()" type="button" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-bold shadow-md border border-emerald-300 transition flex items-center gap-1.5 cursor-pointer">
             <span>💬</span>
             <span>واٹس ایپ سمری</span>
           </button>
@@ -446,7 +446,7 @@
 
       <!-- 4 Big Mobile 1-Tap Quick Action Cards -->
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-        <button id="btnDashQuickNewReceipt" type="button" class="bg-emerald-800 hover:bg-emerald-700 active:scale-98 text-white rounded-2xl p-4 sm:p-5 shadow-sm border-2 border-emerald-500 transition text-right flex flex-col justify-between cursor-pointer">
+        <button id="btnDashQuickNewReceipt" onclick="switchTab('create')" type="button" class="bg-emerald-800 hover:bg-emerald-700 active:scale-98 text-white rounded-2xl p-4 sm:p-5 shadow-sm border-2 border-emerald-500 transition text-right flex flex-col justify-between cursor-pointer">
           <span class="text-2xl sm:text-3xl mb-2">🟢</span>
           <div>
             <h3 class="text-sm sm:text-base font-black text-amber-300">+ نئی رسید بنائیں</h3>
@@ -454,7 +454,7 @@
           </div>
         </button>
 
-        <button id="btnDashQuickNewExpense" type="button" class="bg-rose-900 hover:bg-rose-800 active:scale-98 text-white rounded-2xl p-4 sm:p-5 shadow-sm border-2 border-rose-500 transition text-right flex flex-col justify-between cursor-pointer">
+        <button id="btnDashQuickNewExpense" onclick="switchTab('expense')" type="button" class="bg-rose-900 hover:bg-rose-800 active:scale-98 text-white rounded-2xl p-4 sm:p-5 shadow-sm border-2 border-rose-500 transition text-right flex flex-col justify-between cursor-pointer">
           <span class="text-2xl sm:text-3xl mb-2">🔴</span>
           <div>
             <h3 class="text-sm sm:text-base font-black text-rose-200">- نیا واؤچر بنائیں</h3>
@@ -462,7 +462,7 @@
           </div>
         </button>
 
-        <button id="btnDashQuickParties" type="button" class="bg-slate-900 hover:bg-slate-800 active:scale-98 text-white rounded-2xl p-4 sm:p-5 shadow-sm border-2 border-amber-400 transition text-right flex flex-col justify-between cursor-pointer">
+        <button id="btnDashQuickParties" onclick="switchTab('parties')" type="button" class="bg-slate-900 hover:bg-slate-800 active:scale-98 text-white rounded-2xl p-4 sm:p-5 shadow-sm border-2 border-amber-400 transition text-right flex flex-col justify-between cursor-pointer">
           <span class="text-2xl sm:text-3xl mb-2">👥</span>
           <div>
             <h3 class="text-sm sm:text-base font-black text-amber-300">کھاتہ دار / پارٹیاں</h3>
@@ -470,7 +470,7 @@
           </div>
         </button>
 
-        <button id="btnDashQuickCashbook" type="button" class="bg-emerald-950 hover:bg-emerald-900 active:scale-98 text-white rounded-2xl p-4 sm:p-5 shadow-sm border-2 border-emerald-400 transition text-right flex flex-col justify-between cursor-pointer">
+        <button id="btnDashQuickCashbook" onclick="switchTab('cashbook')" type="button" class="bg-emerald-950 hover:bg-emerald-900 active:scale-98 text-white rounded-2xl p-4 sm:p-5 shadow-sm border-2 border-emerald-400 transition text-right flex flex-col justify-between cursor-pointer">
           <span class="text-2xl sm:text-3xl mb-2">📊</span>
           <div>
             <h3 class="text-sm sm:text-base font-black text-amber-300">روزنامچہ کیش بک</h3>
@@ -544,6 +544,7 @@
             <div>
               <label for="selectCategory" class="block text-xs font-bold text-slate-700 mb-1">مد / فنڈ *</label>
               <select id="selectCategory" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm bg-white focus:border-emerald-600 focus:outline-none">
+                <option value="کرایہ (دکان / مکان / پراپرٹی)">کرایہ (دکان / مکان / پراپرٹی)</option>
                 <option value="تعمیراتی فنڈ">تعمیراتی فنڈ</option>
                 <option value="مسجد جنرل فنڈ">مسجد جنرل فنڈ</option>
                 <option value="مدرسہ و تعلیم القرآن فنڈ">مدرسہ و تعلیم القرآن فنڈ</option>
@@ -577,7 +578,7 @@
             </div>
             <div>
               <label for="inputReceiver" class="block text-xs font-bold text-slate-700 mb-1">وصول کنندہ</label>
-              <input id="inputReceiver" type="text" value="مولانا محمد قمر (امام و منتظم — 0345-7814592)" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm focus:border-emerald-600 focus:outline-none" />
+              <input id="inputReceiver" type="text" value="مولانا محمد قمر (امام و منتظم — 7814592-0345)" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm focus:border-emerald-600 focus:outline-none" />
             </div>
           </div>
 
@@ -704,6 +705,7 @@
               <div class="col-span-6 sm:col-span-8 text-center space-y-0.5">
                 <h2 class="text-xl sm:text-2xl font-extrabold text-emerald-950 tracking-normal leading-tight">جامع مسجد غوثیہ رضویہ</h2>
                 <p class="text-xs sm:text-sm font-bold text-slate-800 leading-snug">محلہ اسلم آباد، فیصل آباد روڈ، جھمرہ سٹی، ضلع فیصل آباد</p>
+                <p class="text-xs font-bold text-emerald-800">رابطہ / امام و منتظم: مولانا محمد قمر (7814592-0345)</p>
                 <div class="inline-block px-3 py-0.5 rounded-full bg-amber-100 text-amber-950 font-bold text-[11px] border border-amber-300">
                   اہل سنت و جماعت (حنفی بریلوی) — رسید عطیہ و چندہ (Donation Receipt)
                 </div>
@@ -808,7 +810,7 @@
                   اللہ تعالیٰ آپ کا دیا ہوا عطیہ و صدقہ اپنی بارگاہ میں قبول و منظور فرمائے۔ آمین
                 </p>
                 <p class="text-[11px] text-slate-500">جزاکم اللہ خیراً و احسن الجزاء فی الدارین</p>
-                <p class="text-[11px] text-slate-600">وصول کنندہ: <span id="cardReceiverName" class="font-bold text-slate-800">مولانا محمد قمر (امام و منتظم — 0345-7814592)</span></p>
+                <p class="text-[11px] text-slate-600">وصول کنندہ: <span id="cardReceiverName" class="font-bold text-slate-800">مولانا محمد قمر (امام و منتظم — 7814592-0345)</span></p>
               </div>
 
               <div class="flex items-center gap-4">
@@ -828,7 +830,7 @@
                       <text x="95" y="32" text-anchor="middle" fill="#1e3a8a" font-family="'Amiri', 'Noto Nastaliq Urdu', serif" font-size="18" font-weight="bold" transform="rotate(-4 95 32)">مولانا محمد قمر</text>
                     </svg>
                   </div>
-                  <span class="block text-[10px] font-bold text-slate-900">دستخط: مولانا محمد قمر (0345-7814592)</span>
+                  <span class="block text-[10px] font-bold text-slate-900">دستخط: مولانا محمد قمر (7814592-0345)</span>
                 </div>
               </div>
             </div>
@@ -895,6 +897,7 @@
             <div>
               <label for="selectExpenseCategory" class="block text-xs font-bold text-slate-700 mb-1">مدِ خرچ (Expense Head) *</label>
               <select id="selectExpenseCategory" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm bg-white focus:border-rose-600 focus:outline-none">
+                <option value="کرایہ (بلڈنگ / عارضی جگہ / دکان)">کرایہ (بلڈنگ / عارضی جگہ / دکان)</option>
                 <option value="امام و خطیب مشاہرہ">امام و خطیب مشاہرہ</option>
                 <option value="مؤذن و خادم مشاہرہ">مؤذن و خادم مشاہرہ</option>
                 <option value="بجلی و یوٹیلیٹی بلز">بجلی و یوٹیلیٹی بلز</option>
@@ -916,7 +919,7 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label for="inputExpenseAmount" class="block text-xs font-bold text-slate-700 mb-1">ادا شدہ رقم (روپے ہندسوں میں) *</label>
-              <input id="inputExpenseAmount" type="number" min="1" step="any" required placeholder="15000" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-base font-bold font-mono-num text-right focus:border-rose-600 focus:outline-none" />
+              <input id="inputExpenseAmount" oninput="updateExpenseUrduWords(this.value)" type="number" min="1" step="any" required placeholder="15000" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-base font-bold font-mono-num text-right focus:border-rose-600 focus:outline-none" />
             </div>
             <div>
               <label for="selectExpensePaymentMode" class="block text-xs font-bold text-slate-700 mb-1">طریقہ ادائیگی *</label>
@@ -941,7 +944,7 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label for="inputExpenseApprovedBy" class="block text-xs font-bold text-slate-700 mb-1">منظور کنندہ / ایڈمن</label>
-              <input id="inputExpenseApprovedBy" type="text" value="مولانا محمد قمر (امام و منتظم — 0345-7814592)" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm focus:border-rose-600 focus:outline-none" />
+              <input id="inputExpenseApprovedBy" type="text" value="مولانا محمد قمر (امام و منتظم — 7814592-0345)" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm focus:border-rose-600 focus:outline-none" />
             </div>
             <div>
               <label for="inputExpenseDateFormatted" class="block text-xs font-bold text-slate-700 mb-1">تاریخ واؤچر</label>
@@ -1070,7 +1073,7 @@
               </div>
               <div class="text-center space-y-1">
                 <div class="w-40 border-b-2 border-slate-700 pb-1">
-                  <span id="cardExpenseApprovedBy" class="text-[11px] font-bold text-slate-900">مولانا محمد قمر (0345-7814592)</span>
+                  <span id="cardExpenseApprovedBy" class="text-[11px] font-bold text-slate-900">مولانا محمد قمر (7814592-0345)</span>
                 </div>
                 <span class="block text-[10px] text-slate-500">دستخط ایڈمن / منتظم مسجد</span>
               </div>
@@ -2556,7 +2559,7 @@
       const category = categoryDetail ? `${baseCategory} (${categoryDetail})` : baseCategory;
       const paymentMode = document.getElementById('selectPaymentMode')?.value || 'نقد';
       const amountVal = Number(document.getElementById('inputAmount')?.value || 0);
-      const receiverName = (document.getElementById('inputReceiver')?.value || 'مولانا محمد قمر (امام و منتظم — 0345-7814592)').trim();
+      const receiverName = (document.getElementById('inputReceiver')?.value || 'مولانا محمد قمر (امام و منتظم — 7814592-0345)').trim();
       const dateFormatted = (document.getElementById('inputDateFormatted')?.value || '').trim();
       const hijriDate = (document.getElementById('inputHijriDate')?.value || '').trim();
       const editNo = (document.getElementById('editReceiptNo')?.value || '').trim();
@@ -2626,7 +2629,7 @@
       setTxt('cardCategory', receipt.category || 'تعمیراتی فنڈ');
       setTxt('cardPaymentMode', `طریقہ: ${receipt.payment_mode || 'نقد'}`);
       setTxt('cardAmountWords', receipt.amount_words || amountToUrduWords(receipt.amount_numeric));
-      setTxt('cardReceiverName', receipt.receiver_name || 'مولانا محمد قمر (امام و منتظم — 0345-7814592)');
+      setTxt('cardReceiverName', receipt.receiver_name || 'مولانا محمد قمر (امام و منتظم — 7814592-0345)');
       setTxt('cardAmountNumeric', Number(receipt.amount_numeric || 0).toLocaleString('en-US'));
 
       const footer = buildReceiptFooterLines(receipt);
@@ -2644,6 +2647,82 @@
     }
 
     // Render Receipts Table & Counters
+    
+    function handleReceiptAction(event, action, key) {
+      if (event) event.stopPropagation();
+      const target = (state.receipts || []).find((r) => (r.temp_id || r.receipt_no) === key);
+      if (!target) {
+        showToast('رسید ریکارڈ میں نہیں ملی۔', 'error');
+        return;
+      }
+
+      if (action === 'view') {
+        renderOfficialReceiptCard(target);
+        switchTab('create');
+        const prevCol = document.getElementById('createPreviewCol');
+        const formCol = document.getElementById('createFormCol');
+        if (prevCol && formCol && window.innerWidth < 1024) {
+          prevCol.classList.remove('hidden');
+          formCol.classList.add('hidden');
+          const btnCard = document.getElementById('btnMobileShowReceiptCard');
+          const btnForm = document.getElementById('btnMobileShowReceiptForm');
+          if (btnCard) btnCard.className = 'flex-1 py-2.5 rounded-xl bg-emerald-800 text-white shadow-sm transition cursor-pointer';
+          if (btnForm) btnForm.className = 'flex-1 py-2.5 rounded-xl text-slate-700 hover:text-slate-900 transition cursor-pointer';
+        }
+      } else if (action === 'edit') {
+        document.getElementById('inputDonorName').value = target.donor_name || '';
+        document.getElementById('inputDonorAddress').value = target.donor_address || '';
+        document.getElementById('inputDonorPhone').value = target.donor_phone || '';
+        const catStr = String(target.category || 'تعمیراتی فنڈ');
+        const selEl = document.getElementById('selectCategory');
+        const detEl = document.getElementById('inputCategoryDetail');
+        const openParen = catStr.indexOf(' (');
+        if (openParen !== -1 && catStr.endsWith(')') && !catStr.startsWith('متفرق آمدن (فروختِ اشیاء و دیگر)')) {
+          selEl.value = catStr.slice(0, openParen);
+          if (detEl) detEl.value = catStr.slice(openParen + 2, -1);
+        } else if (catStr.startsWith('متفرق آمدن (فروختِ اشیاء و دیگر) (') && catStr.endsWith(')')) {
+          selEl.value = 'متفرق آمدن (فروختِ اشیاء و دیگر)';
+          if (detEl) detEl.value = catStr.slice('متفرق آمدن (فروختِ اشیاء و دیگر) ('.length, -1);
+        } else {
+          selEl.value = catStr;
+          if (detEl) detEl.value = '';
+        }
+        document.getElementById('selectPaymentMode').value = target.payment_mode || 'نقد';
+        document.getElementById('inputAmount').value = String(target.amount_numeric || '');
+        document.getElementById('displayAmountWords').textContent = target.amount_words || amountToUrduWords(target.amount_numeric);
+        document.getElementById('editReceiptNo').value = target.receipt_no || '';
+        document.getElementById('editReceiptVersion').value = String(target.version || 1);
+        document.getElementById('editModeIndicator').classList.remove('hidden');
+        document.getElementById('formHeading').textContent = `رسید میں ترمیم (${target.receipt_no || 'عارضی'})`;
+        renderOfficialReceiptCard(target);
+        switchTab('create');
+        const prevCol = document.getElementById('createPreviewCol');
+        const formCol = document.getElementById('createFormCol');
+        if (prevCol && formCol && window.innerWidth < 1024) {
+          formCol.classList.remove('hidden');
+          prevCol.classList.add('hidden');
+          const btnForm = document.getElementById('btnMobileShowReceiptForm');
+          const btnCard = document.getElementById('btnMobileShowReceiptCard');
+          if (btnForm) btnForm.className = 'flex-1 py-2.5 rounded-xl bg-emerald-800 text-white shadow-sm transition cursor-pointer';
+          if (btnCard) btnCard.className = 'flex-1 py-2.5 rounded-xl text-slate-700 hover:text-slate-900 transition cursor-pointer';
+        }
+      } else if (action === 'delete') {
+        const confirmMsg = `کیا آپ واقعی رسید ${target.receipt_no || 'عارضی'} حذف کرنا چاہتے ہیں؟`;
+        if (!confirm(confirmMsg)) return;
+        requireWriterSession(() => {
+          target.deleted = true;
+          target.version = Number(target.version || 1) + 1;
+          target.updated_by_email = state.currentEmail;
+          target.updated_at = new Date().toISOString();
+          saveReceiptsToLocalStorage();
+          renderReceiptsList();
+          renderDashboardView();
+          showToast(`رسید ${target.receipt_no || 'عارضی'} کو فہرست سے حذف کر دیا گیا ہے۔`, 'success');
+        });
+      }
+    }
+    window.handleReceiptAction = handleReceiptAction;
+
     function renderReceiptsList() {
       const tbody = document.getElementById('receiptsTableBody');
       const searchInput = document.getElementById('searchReceiptsInput');
@@ -2697,9 +2776,9 @@
           }</td>
           <td class="py-3 px-3">
             <div class="flex flex-wrap gap-1.5">
-              <button type="button" data-action="view" data-key="${r.temp_id || r.receipt_no}" class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-900 text-xs font-bold border border-emerald-300">دیکھیں</button>
-              <button type="button" data-action="edit" data-key="${r.temp_id || r.receipt_no}" class="px-2.5 py-1 rounded-lg bg-amber-50 text-amber-900 text-xs font-bold border border-amber-300">ترمیم</button>
-              <button type="button" data-action="delete" data-key="${r.temp_id || r.receipt_no}" class="px-2.5 py-1 rounded-lg bg-rose-50 text-rose-900 text-xs font-bold border border-rose-300">حذف</button>
+              <button type="button" onclick="handleReceiptAction(event, 'view', '${r.temp_id || r.receipt_no}')" class="px-2.5 py-1 rounded-lg bg-emerald-100 hover:bg-emerald-200 text-emerald-950 text-xs font-bold border border-emerald-300 cursor-pointer shadow-xs">👁️ دیکھیں</button>
+              <button type="button" onclick="handleReceiptAction(event, 'edit', '${r.temp_id || r.receipt_no}')" class="px-2.5 py-1 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-950 text-xs font-bold border border-amber-300 cursor-pointer shadow-xs">✏️ ترمیم</button>
+              <button type="button" onclick="handleReceiptAction(event, 'delete', '${r.temp_id || r.receipt_no}')" class="px-2.5 py-1 rounded-lg bg-rose-100 hover:bg-rose-200 text-rose-950 text-xs font-bold border border-rose-300 cursor-pointer shadow-xs">🗑️ حذف</button>
             </div>
           </td>
         `;
@@ -2773,6 +2852,19 @@
       return false;
     }
 
+    
+    function updateExpenseUrduWords(val) {
+      const num = Number(val);
+      const words = num > 0 ? amountToUrduWords(num) : '—';
+      const dw = document.getElementById('displayExpenseWords');
+      if (dw) dw.textContent = words;
+      const cw = document.getElementById('cardExpenseAmountWords');
+      if (cw) cw.textContent = words;
+      const ca = document.getElementById('cardExpenseAmountNumeric');
+      if (ca) ca.textContent = num > 0 ? num.toLocaleString('en-US') : '0';
+    }
+    window.updateExpenseUrduWords = updateExpenseUrduWords;
+
     function updateLiveExpensePreview() {
       const payeeName = (document.getElementById('inputExpensePayee')?.value || '').trim();
       const payeePhone = (document.getElementById('inputExpensePhone')?.value || '').trim();
@@ -2785,6 +2877,10 @@
       const hijriDate = (document.getElementById('inputExpenseHijriDate')?.value || '').trim();
       const editNo = (document.getElementById('editVoucherNo')?.value || '').trim();
       const nextNo = editNo || `EXP-2026-11-${String(state.expenseSeqCounter + 1).padStart(4, '0')}`;
+
+      const amtWords = amountVal > 0 ? amountToUrduWords(amountVal) : '—';
+      const dwExpense = document.getElementById('displayExpenseWords');
+      if (dwExpense) dwExpense.textContent = amtWords;
 
       const draftExpense = {
         voucher_no: (state.isOfflineSim || !navigator.onLine) && !editNo ? '' : nextNo,
@@ -2849,7 +2945,7 @@
       setTxt('cardExpenseDesc', expense.description || '—');
       setTxt('cardExpenseAmountWords', expense.amount_words || amountToUrduWords(expense.amount_numeric));
       setTxt('cardExpenseAmountNumeric', Number(expense.amount_numeric || 0).toLocaleString('en-US'));
-      setTxt('cardExpenseApprovedBy', expense.approved_by || 'مولانا محمد قمر (0345-7814592)');
+      setTxt('cardExpenseApprovedBy', expense.approved_by || 'مولانا محمد قمر (7814592-0345)');
 
       const dt = formatKarachiDateTime(expense.created_at || expense.offline_created_at);
       setTxt('cardExpenseFooterCreated', `بتاریخ ${dt.date}، وقت ${dt.time}`);
@@ -3573,7 +3669,7 @@
 
 شکریہ و جزاک اللہ خیراً!
 باہتمام: مولانا محمد قمر (امام و منتظم مسجد)
-رابطہ فون: 0345-7814592`;
+رابطہ فون: 7814592-0345`;
 
       const encoded = encodeURIComponent(text);
       const cleanPhone = (party.phone || '').replace(/[^0-9]/g, '');
@@ -3925,7 +4021,7 @@
 
 یہ رپورٹ کمیٹی و متولیان کے لیے ڈیجی کھاتہ کیش بک سسٹم سے جاری کی گئی ہے۔
 شکریہ!
-باہتمام: مولانا محمد قمر (امام و منتظم — رابطہ: 0345-7814592)`;
+باہتمام: مولانا محمد قمر (امام و منتظم — رابطہ: 7814592-0345)`;
 
       const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
       window.open(url, '_blank');
@@ -4053,7 +4149,7 @@
 
       ctx.fillStyle = '#1e293b';
       ctx.font = 'bold 16px "Noto Nastaliq Urdu", "Amiri", sans-serif';
-      ctx.fillText('محلہ اسلم آباد، فیصل آباد روڈ، جھمرہ سٹی، ضلع فیصل آباد', canvas.width / 2, 168);
+      ctx.fillText('محلہ اسلم آباد، فیصل آباد روڈ، جھمرہ سٹی | رابطہ: مولانا محمد قمر (7814592-0345)', canvas.width / 2, 168);
 
       const isSynced = expense.sync_status === 'synced' && expense.voucher_no;
       const vNo = isSynced ? expense.voucher_no : 'عارضی واؤچر';
@@ -4399,7 +4495,7 @@
       ctx.fillText('جزاکم اللہ خیراً و احسن الجزاء فی الدارین', gridX + gridW - 10, bottomY + 50);
       ctx.fillStyle = '#0f172a';
       ctx.font = 'bold 13px "Noto Nastaliq Urdu", sans-serif';
-      ctx.fillText('وصول کنندہ: ' + (receipt.receiver_name || 'مولانا محمد قمر') + ' (0345-7814592)', gridX + gridW - 10, bottomY + 70);
+      ctx.fillText('وصول کنندہ: ' + (receipt.receiver_name || 'مولانا محمد قمر') + ' (7814592-0345)', gridX + gridW - 10, bottomY + 70);
 
       ctx.strokeStyle = '#059669';
       ctx.lineWidth = 1.5;
@@ -4443,7 +4539,7 @@
       ctx.textAlign = 'center';
       ctx.fillStyle = '#0f172a';
       ctx.font = 'bold 14px "Noto Nastaliq Urdu", sans-serif';
-      ctx.fillText('دستخط: مولانا محمد قمر (0345-7814592)', 205, bottomY + 68, 280);
+      ctx.fillText('دستخط: مولانا محمد قمر (7814592-0345)', 205, bottomY + 68, 280);
 
       // Date/Time Footer (Right) & Developed by Atiq_Goraya (Bottom-Left Corner)
       const footer = buildReceiptFooterLines(receipt);
@@ -4515,7 +4611,7 @@
         'مد / فنڈ: ' + receipt.category,
         'رقم: Rs. ' + Number(receipt.amount_numeric).toLocaleString('en-US') + ' (' + receipt.amount_words + ')',
         'ادائیگی: ' + receipt.payment_mode,
-        'وصول کنندہ: ' + (receipt.receiver_name || 'مولانا محمد قمر') + ' (0345-7814592)',
+        'وصول کنندہ: ' + (receipt.receiver_name || 'مولانا محمد قمر') + ' (7814592-0345)',
         footer.createdLine,
         '---------------------------------',
         'اللہ تعالیٰ آپ کا عطیہ قبول فرمائے۔ جزاکم اللہ خیراً',
@@ -5079,7 +5175,7 @@
       document.getElementById('inputDonorAddress').value = 'محلہ اسلم آباد، جھمرہ سٹی';
       document.getElementById('inputDonorPhone').value = '';
       document.getElementById('displayAmountWords').textContent = '—';
-      state.receipts[0].receiver_name = 'مولانا محمد قمر (امام و منتظم — 0345-7814592)';
+      state.receipts[0].receiver_name = 'مولانا محمد قمر (امام و منتظم — 7814592-0345)';
       loadReceiptsFromLocalStorage();
       loadExpensesFromLocalStorage();
       const expDateEl = document.getElementById('inputExpenseDateFormatted');
@@ -5354,8 +5450,9 @@
       });
       document.getElementById('btnSubmitPassword').addEventListener('click', handleVerifyPasswordSubmit);
 
-      // Toggle Offline Simulation Mode
-      document.getElementById('btnToggleOfflineSim').addEventListener('click', () => {
+      // Toggle Offline Simulation Mode (Safe Null Check)
+      const btnToggleOff = document.getElementById('btnToggleOfflineSim');
+      if (btnToggleOff) btnToggleOff.addEventListener('click', () => {
         state.isOfflineSim = !state.isOfflineSim;
         const badge = document.getElementById('connectionBadge');
         const txt = document.getElementById('connectionText');
@@ -5454,7 +5551,7 @@
         document.getElementById('editModeIndicator').classList.add('hidden');
         document.getElementById('formHeading').textContent = 'نئی رسید بنائیں';
         document.getElementById('displayAmountWords').textContent = '—';
-        document.getElementById('inputReceiver').value = 'مولانا محمد قمر (امام و منتظم — 0345-7814592)';
+        document.getElementById('inputReceiver').value = 'مولانا محمد قمر (امام و منتظم — 7814592-0345)';
         applyPakistanDateToForm(new Date(), false);
       });
 
