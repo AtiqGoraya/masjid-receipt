@@ -578,7 +578,7 @@
             </div>
             <div>
               <label for="inputReceiver" class="block text-xs font-bold text-slate-700 mb-1">وصول کنندہ</label>
-              <input id="inputReceiver" type="text" value="مولانا محمد قمر (امام و منتظم — 7814592-0345)" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm focus:border-emerald-600 focus:outline-none" />
+              <input id="inputReceiver" type="text" value="مولانا محمد قمر (7814592-0345)" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm focus:border-emerald-600 focus:outline-none" />
             </div>
           </div>
 
@@ -705,7 +705,6 @@
               <div class="col-span-6 sm:col-span-8 text-center space-y-0.5">
                 <h2 class="text-xl sm:text-2xl font-extrabold text-emerald-950 tracking-normal leading-tight">جامع مسجد غوثیہ رضویہ</h2>
                 <p class="text-xs sm:text-sm font-bold text-slate-800 leading-snug">محلہ اسلم آباد، فیصل آباد روڈ، جھمرہ سٹی، ضلع فیصل آباد</p>
-                <p class="text-xs font-bold text-emerald-800">رابطہ / امام و منتظم: مولانا محمد قمر (7814592-0345)</p>
                 <div class="inline-block px-3 py-0.5 rounded-full bg-amber-100 text-amber-950 font-bold text-[11px] border border-amber-300">
                   اہل سنت و جماعت (حنفی بریلوی) — رسید عطیہ و چندہ (Donation Receipt)
                 </div>
@@ -806,11 +805,11 @@
             <!-- Signatures, Dua & Mosque Stamp Section -->
             <div class="pt-1.5 border-t border-emerald-800/20 flex flex-wrap items-center justify-between gap-3 text-xs">
               <div class="space-y-0.5 max-w-sm">
-                <p class="font-bold text-emerald-950 leading-relaxed">
+                <p id="cardDuaLine1" class="font-bold text-emerald-950 leading-relaxed">
                   اللہ تعالیٰ آپ کا دیا ہوا عطیہ و صدقہ اپنی بارگاہ میں قبول و منظور فرمائے۔ آمین
                 </p>
-                <p class="text-[11px] text-slate-500">جزاکم اللہ خیراً و احسن الجزاء فی الدارین</p>
-                <p class="text-[11px] text-slate-600">وصول کنندہ: <span id="cardReceiverName" class="font-bold text-slate-800">مولانا محمد قمر (امام و منتظم — 7814592-0345)</span></p>
+                <p id="cardDuaLine2" class="text-[11px] text-slate-500">جزاکم اللہ خیراً و احسن الجزاء فی الدارین</p>
+                <p class="text-[11px] text-slate-600">وصول کنندہ: <span id="cardReceiverName" class="font-bold text-slate-800">مولانا محمد قمر (7814592-0345)</span></p>
               </div>
 
               <div class="flex items-center gap-4">
@@ -830,7 +829,7 @@
                       <text x="95" y="32" text-anchor="middle" fill="#1e3a8a" font-family="'Amiri', 'Noto Nastaliq Urdu', serif" font-size="18" font-weight="bold" transform="rotate(-4 95 32)">مولانا محمد قمر</text>
                     </svg>
                   </div>
-                  <span class="block text-[10px] font-bold text-slate-900">دستخط: مولانا محمد قمر (7814592-0345)</span>
+                  <span class="block text-[10px] font-bold text-slate-900">دستخط: مولانا محمد قمر (امام و منتظم)</span>
                 </div>
               </div>
             </div>
@@ -944,7 +943,7 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label for="inputExpenseApprovedBy" class="block text-xs font-bold text-slate-700 mb-1">منظور کنندہ / ایڈمن</label>
-              <input id="inputExpenseApprovedBy" type="text" value="مولانا محمد قمر (امام و منتظم — 7814592-0345)" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm focus:border-rose-600 focus:outline-none" />
+              <input id="inputExpenseApprovedBy" type="text" value="مولانا محمد قمر (7814592-0345)" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm focus:border-rose-600 focus:outline-none" />
             </div>
             <div>
               <label for="inputExpenseDateFormatted" class="block text-xs font-bold text-slate-700 mb-1">تاریخ واؤچر</label>
@@ -2148,7 +2147,7 @@
           date_formatted: '25 اکتوبر 2026',
           hijri_date: '12 ربیع الاول 1448ھ',
           payee_name: 'قاری محمد قمر صاحب',
-          payee_phone: '03001234567',
+          payee_phone: '03457814592',
           category: 'امام و خطیب مشاہرہ',
           description: 'ماہانہ مشاہرہ برائے ماہ اکتوبر 2026',
           amount_numeric: 25000,
@@ -2559,11 +2558,13 @@
       const category = categoryDetail ? `${baseCategory} (${categoryDetail})` : baseCategory;
       const paymentMode = document.getElementById('selectPaymentMode')?.value || 'نقد';
       const amountVal = Number(document.getElementById('inputAmount')?.value || 0);
-      const receiverName = (document.getElementById('inputReceiver')?.value || 'مولانا محمد قمر (امام و منتظم — 7814592-0345)').trim();
+      const receiverName = (document.getElementById('inputReceiver')?.value || 'مولانا محمد قمر (7814592-0345)').trim();
       const dateFormatted = (document.getElementById('inputDateFormatted')?.value || '').trim();
       const hijriDate = (document.getElementById('inputHijriDate')?.value || '').trim();
       const editNo = (document.getElementById('editReceiptNo')?.value || '').trim();
-      const nextNo = editNo || `GM-2026-10-${String(state.serverSeqCounter + 1).padStart(4, '0')}`;
+      const nowDt = new Date();
+      const currentYm = `${nowDt.getFullYear()}-${String(nowDt.getMonth() + 1).padStart(2, '0')}`;
+      const nextNo = editNo || `GM-${currentYm}-${String(state.serverSeqCounter + 1).padStart(4, '0')}`;
 
       const draftReceipt = {
         receipt_no: (state.isOfflineSim || !navigator.onLine) && !editNo ? '' : nextNo,
@@ -2629,7 +2630,14 @@
       setTxt('cardCategory', receipt.category || 'تعمیراتی فنڈ');
       setTxt('cardPaymentMode', `طریقہ: ${receipt.payment_mode || 'نقد'}`);
       setTxt('cardAmountWords', receipt.amount_words || amountToUrduWords(receipt.amount_numeric));
-      setTxt('cardReceiverName', receipt.receiver_name || 'مولانا محمد قمر (امام و منتظم — 7814592-0345)');
+      setTxt('cardReceiverName', receipt.receiver_name || 'مولانا محمد قمر (7814592-0345)');
+
+      // If Rent (کرایہ) or Misc Income (متفرق آمدن), hide donation prayer
+      const isCommercial = (receipt.category || '').includes('کرایہ') || (receipt.category || '').includes('متفرق آمدن');
+      const duaL1 = document.getElementById('cardDuaLine1');
+      const duaL2 = document.getElementById('cardDuaLine2');
+      if (duaL1) duaL1.style.display = isCommercial ? 'none' : '';
+      if (duaL2) duaL2.style.display = isCommercial ? 'none' : '';
       setTxt('cardAmountNumeric', Number(receipt.amount_numeric || 0).toLocaleString('en-US'));
 
       const footer = buildReceiptFooterLines(receipt);
@@ -4149,7 +4157,7 @@
 
       ctx.fillStyle = '#1e293b';
       ctx.font = 'bold 16px "Noto Nastaliq Urdu", "Amiri", sans-serif';
-      ctx.fillText('محلہ اسلم آباد، فیصل آباد روڈ، جھمرہ سٹی | رابطہ: مولانا محمد قمر (7814592-0345)', canvas.width / 2, 168);
+      ctx.fillText('محلہ اسلم آباد، فیصل آباد روڈ، جھمرہ سٹی، ضلع فیصل آباد', canvas.width / 2, 168);
 
       const isSynced = expense.sync_status === 'synced' && expense.voucher_no;
       const vNo = isSynced ? expense.voucher_no : 'عارضی واؤچر';
@@ -4486,16 +4494,19 @@
 
       const bottomY = 540;
 
+      const isCommercialReceipt = (receipt.category || '').includes('کرایہ') || (receipt.category || '').includes('متفرق آمدن');
       ctx.textAlign = 'right';
-      ctx.fillStyle = '#064e3b';
-      ctx.font = 'bold 16px "Noto Nastaliq Urdu", "Amiri", serif';
-      ctx.fillText('اللہ تعالیٰ آپ کا دیا ہوا عطیہ و صدقہ اپنی بارگاہ میں قبول و منظور فرمائے۔ آمین', gridX + gridW - 10, bottomY + 25);
-      ctx.fillStyle = '#475569';
-      ctx.font = '13px "Noto Nastaliq Urdu", sans-serif';
-      ctx.fillText('جزاکم اللہ خیراً و احسن الجزاء فی الدارین', gridX + gridW - 10, bottomY + 50);
+      if (!isCommercialReceipt) {
+        ctx.fillStyle = '#064e3b';
+        ctx.font = 'bold 16px "Noto Nastaliq Urdu", "Amiri", serif';
+        ctx.fillText('اللہ تعالیٰ آپ کا دیا ہوا عطیہ و صدقہ اپنی بارگاہ میں قبول و منظور فرمائے۔ آمین', gridX + gridW - 10, bottomY + 25);
+        ctx.fillStyle = '#475569';
+        ctx.font = '13px "Noto Nastaliq Urdu", sans-serif';
+        ctx.fillText('جزاکم اللہ خیراً و احسن الجزاء فی الدارین', gridX + gridW - 10, bottomY + 48);
+      }
       ctx.fillStyle = '#0f172a';
-      ctx.font = 'bold 13px "Noto Nastaliq Urdu", sans-serif';
-      ctx.fillText('وصول کنندہ: ' + (receipt.receiver_name || 'مولانا محمد قمر') + ' (7814592-0345)', gridX + gridW - 10, bottomY + 70);
+      ctx.font = 'bold 14px "Noto Nastaliq Urdu", sans-serif';
+      ctx.fillText('وصول کنندہ: ' + (receipt.receiver_name || 'مولانا محمد قمر (7814592-0345)'), gridX + gridW - 10, bottomY + (isCommercialReceipt ? 35 : 70));
 
       ctx.strokeStyle = '#059669';
       ctx.lineWidth = 1.5;
@@ -4539,7 +4550,7 @@
       ctx.textAlign = 'center';
       ctx.fillStyle = '#0f172a';
       ctx.font = 'bold 14px "Noto Nastaliq Urdu", sans-serif';
-      ctx.fillText('دستخط: مولانا محمد قمر (7814592-0345)', 205, bottomY + 68, 280);
+      ctx.fillText('دستخط: مولانا محمد قمر (امام و منتظم)', 205, bottomY + 68, 280);
 
       // Date/Time Footer (Right) & Developed by Atiq_Goraya (Bottom-Left Corner)
       const footer = buildReceiptFooterLines(receipt);
@@ -4687,6 +4698,39 @@
       closeSideMenu();
       switchTab(tabName);
     }
+
+    
+    function resetTestDataAndStartFresh() {
+      const confirmMsg = 'کیا آپ واقعی تمام پرانی ٹیسٹ رسیدیں اور واؤچرز صاف کر کے نیا باضابطہ ریکارڈ شروع کرنا چاہتے ہیں؟\n\n(اس عمل سے لوکل ٹیسٹ ڈیٹا صاف ہو جائے گا اور نئی رسید کا نمبر 0001 سے شروع ہو گا۔)';
+      if (!confirm(confirmMsg)) return;
+
+      requireWriterSession(() => {
+        state.receipts = [];
+        state.expenses = [];
+        state.serverSeqCounter = 0;
+        state.expenseSeqCounter = 0;
+
+        try {
+          localStorage.removeItem('masjid_ghousia_live_receipts_v2');
+          localStorage.removeItem('masjid_ghousia_live_expenses_v2');
+          localStorage.setItem('masjid_ghousia_live_seq_v2', '0');
+          localStorage.setItem('masjid_ghousia_live_exp_seq_v2', '0');
+        } catch (e) {
+          console.warn('Storage clear warning:', e);
+        }
+
+        applyPakistanDateToForm(new Date(), true);
+        renderReceiptsList();
+        renderDashboardView();
+        renderCashbookDashboard();
+        renderPartiesDashboard();
+        updateLiveFormPreview();
+        updateLiveExpensePreview();
+
+        showToast('✅ تمام پرانی ٹیسٹ رسیدیں صاف کر دی گئیں اور نیا ریکارڈ نمبر 0001 سے شروع ہو گیا ہے۔', 'success');
+      });
+    }
+    window.resetTestDataAndStartFresh = resetTestDataAndStartFresh;
 
     function updateDeveloperVisibility() {
       const isOwner = (state.currentEmail || '').toLowerCase() === APP_CONFIG.OWNER_EMAIL.toLowerCase();
@@ -5175,7 +5219,7 @@
       document.getElementById('inputDonorAddress').value = 'محلہ اسلم آباد، جھمرہ سٹی';
       document.getElementById('inputDonorPhone').value = '';
       document.getElementById('displayAmountWords').textContent = '—';
-      state.receipts[0].receiver_name = 'مولانا محمد قمر (امام و منتظم — 7814592-0345)';
+      if (state.receipts && state.receipts[0]) state.receipts[0].receiver_name = 'مولانا محمد قمر (7814592-0345)';
       loadReceiptsFromLocalStorage();
       loadExpensesFromLocalStorage();
       const expDateEl = document.getElementById('inputExpenseDateFormatted');
@@ -5551,7 +5595,7 @@
         document.getElementById('editModeIndicator').classList.add('hidden');
         document.getElementById('formHeading').textContent = 'نئی رسید بنائیں';
         document.getElementById('displayAmountWords').textContent = '—';
-        document.getElementById('inputReceiver').value = 'مولانا محمد قمر (امام و منتظم — 7814592-0345)';
+        document.getElementById('inputReceiver').value = 'مولانا محمد قمر (7814592-0345)';
         applyPakistanDateToForm(new Date(), false);
       });
 
