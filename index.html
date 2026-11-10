@@ -8,7 +8,13 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="مسجد رسید" />
   <title>جامع مسجد غوثیہ رضویہ — ڈیجیٹل رسید سسٹم (PWA)</title>
-  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="manifest" href="./manifest.json" />
+  <script src="./tailwind.3.4.17.js"></script>
+  <script>
+    if (typeof tailwind === 'undefined') {
+      document.write('<script src="https://cdn.tailwindcss.com/3.4.17"><\/script>');
+    }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@400;600;700&family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap" rel="stylesheet" />
@@ -19,7 +25,7 @@
       --masjid-gold: #f59e0b;
     }
     body {
-      font-family: 'Noto Nastaliq Urdu', 'Amiri', 'Inter', system-ui, sans-serif;
+      font-family: 'Noto Nastaliq Urdu', 'Urdu Typesetting', 'Jameel Noori Nastaleeq', 'Amiri', 'Inter', system-ui, -apple-system, sans-serif;
       background-color: #f1f5f9;
       color: #0f172a;
       line-height: 2.0;
@@ -5285,7 +5291,17 @@
       // Update Banner Refresh
       document.getElementById('btnApplyUpdate').addEventListener('click', () => {
         document.getElementById('updateBanner').classList.add('hidden');
-        showToast('ایپ کا نیا ورژن فعال ہو گیا ہے (بغیر کوئی ڈیٹا حذف کیے)۔', 'success');
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistration().then((reg) => {
+            if (reg && reg.waiting) {
+              reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+            } else {
+              window.location.reload();
+            }
+          });
+        } else {
+          window.location.reload();
+        }
       });
 
       // Navigation Tabs
@@ -5430,6 +5446,36 @@
       }
       setupDynamicManifest();
 
+      // Register Service Worker for Full Offline Support (PWA - Zero Internet / Load Shedding)
+      if ('serviceWorker' in navigator && (window.location.protocol.startsWith('http') || window.location.protocol === 'https:')) {
+        navigator.serviceWorker.register('./sw.js', { scope: './' })
+          .then((reg) => {
+            console.log('✅ Service Worker registered successfully (scope: ' + reg.scope + ')');
+            reg.onupdatefound = () => {
+              const installingWorker = reg.installing;
+              if (installingWorker) {
+                installingWorker.onstatechange = () => {
+                  if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    const banner = document.getElementById('updateBanner');
+                    if (banner) banner.classList.remove('hidden');
+                  }
+                };
+              }
+            };
+          })
+          .catch((err) => {
+            console.warn('Service Worker registration warning:', err);
+          });
+
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (!refreshing) {
+            refreshing = true;
+            window.location.reload();
+          }
+        });
+      }
+
       function downloadStandaloneAppHtml() {
         try {
           const fullHtml = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
@@ -5494,22 +5540,47 @@
       });
       document.getElementById('btnSubmitPassword').addEventListener('click', handleVerifyPasswordSubmit);
 
+      // Real-time Online / Offline Status Manager (Zero Internet / Load Shedding)
+      function updateOnlineStatusUi() {
+        const isOff = state.isOfflineSim || !navigator.onLine;
+        const badge = document.getElementById('connectionBadge');
+        const txt = document.getElementById('connectionText');
+        const dot = document.getElementById('connectionDot');
+        if (isOff) {
+          if (txt) txt.textContent = 'آف لائن';
+          if (badge) badge.className = 'px-2.5 py-1 rounded-full text-[11px] sm:text-xs font-bold bg-amber-600 text-white border border-amber-300 flex items-center gap-1.5';
+          if (dot) dot.className = 'w-2 h-2 rounded-full bg-amber-200 inline-block';
+        } else {
+          if (txt) txt.textContent = 'آن لائن';
+          if (badge) badge.className = 'px-2.5 py-1 rounded-full text-[11px] sm:text-xs font-bold bg-emerald-700 text-emerald-100 border border-emerald-400 flex items-center gap-1.5';
+          if (dot) dot.className = 'w-2 h-2 rounded-full bg-emerald-300 inline-block';
+        }
+      }
+
+      window.addEventListener('online', () => {
+        updateOnlineStatusUi();
+        showToast('انٹرنیٹ بحال ہو گیا ہے۔ زیرِ التوا رسیدیں شیٹ سے سنک کی جا رہی ہیں...', 'success');
+        const pending = state.receipts.filter((r) => !r.deleted && r.sync_status !== 'synced');
+        if (pending.length > 0) {
+          syncPendingOfflineReceipts();
+        }
+      });
+
+      window.addEventListener('offline', () => {
+        updateOnlineStatusUi();
+        showToast('انٹرنیٹ یا بجلی بند ہے۔ ایپ مکمل آف لائن کام کر رہی ہے، رسیدیں بنتی رہیں گی۔', 'info');
+      });
+
+      updateOnlineStatusUi();
+
       // Toggle Offline Simulation Mode (Safe Null Check)
       const btnToggleOff = document.getElementById('btnToggleOfflineSim');
       if (btnToggleOff) btnToggleOff.addEventListener('click', () => {
         state.isOfflineSim = !state.isOfflineSim;
-        const badge = document.getElementById('connectionBadge');
-        const txt = document.getElementById('connectionText');
-        const dot = document.getElementById('connectionDot');
+        updateOnlineStatusUi();
         if (state.isOfflineSim) {
-          txt.textContent = 'آف لائن';
-          badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-amber-600 text-white border border-amber-300 flex items-center gap-1.5';
-          dot.className = 'w-2.5 h-2.5 rounded-full bg-amber-200 inline-block';
-          showToast('آف لائن موڈ فعال: اب بننے والی رسیدیں "عارضی نمبر" کے ساتھ IndexedDB میں محفوظ ہوں گی۔', 'info');
+          showToast('آف لائن موڈ فعال: اب بننے والی رسیدیں مقامی میموری (IndexedDB) میں محفوظ ہوں گی۔', 'info');
         } else {
-          txt.textContent = 'آن لائن';
-          badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-emerald-700 text-emerald-100 border border-emerald-400 flex items-center gap-1.5';
-          dot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-300 inline-block';
           const pending = state.receipts.filter((r) => !r.deleted && r.sync_status !== 'synced');
           if (pending.length > 0) {
             if (isWriterSessionValid()) {
