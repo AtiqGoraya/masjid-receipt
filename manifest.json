@@ -1,0 +1,27 @@
+{
+  "name": "جامع مسجد غوثیہ رضویہ — رسید سسٹم",
+  "short_name": "مسجد رسید",
+  "description": "جامع مسجد غوثیہ رضویہ (جھمرہ سٹی) کے لیے آف لائن اور آن لائن اردو رسید سسٹم",
+  "lang": "ur",
+  "dir": "rtl",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f8fafc",
+  "theme_color": "#064e3b",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='36' fill='%23064e3b'/%3E%3Cpath d='M96 34c-24 18-38 36-38 56h76c0-20-14-38-38-56z' fill='%23f59e0b'/%3E%3Crect x='48' y='94' width='96' height='58' rx='8' fill='%23ffffff'/%3E%3Crect x='82' y='112' width='28' height='40' rx='14' fill='%23064e3b'/%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='96' fill='%23064e3b'/%3E%3Cpath d='M256 90c-64 48-100 96-100 150h200c0-54-36-102-100-150z' fill='%23f59e0b'/%3E%3Crect x='128' y='250' width='256' height='154' rx='20' fill='%23ffffff'/%3E%3Crect x='218' y='298' width='76' height='106' rx='38' fill='%23064e3b'/%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

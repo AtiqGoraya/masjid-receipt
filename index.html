@@ -965,6 +965,9 @@
             <button id="btnResetExpenseForm" type="button" class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 text-xs font-bold transition">
               نیا فارم
             </button>
+            <button id="btnClearAllExpenses" type="button" onclick="clearAllExpenses()" class="px-3 py-2.5 rounded-xl border border-rose-300 text-rose-700 hover:bg-rose-50 text-xs font-bold transition" title="تمام اخراجات ختم کر کے کل ادائیگی 0 کریں">
+              اخراجات 0 کریں
+            </button>
           </div>
         </form>
       </div>
@@ -2143,33 +2146,9 @@
       isOfflineSim: false,
       deviceId: 'DEV-A101',
       serverSeqCounter: 1,
-      expenseSeqCounter: 1,
+      expenseSeqCounter: 0,
       activePreviewExpense: null,
-      expenses: [
-        {
-          voucher_no: 'EXP-2026-10-0001',
-          temp_id: 'SEED-EXP-1001',
-          sync_status: 'synced',
-          date_formatted: '25 اکتوبر 2026',
-          hijri_date: '12 ربیع الاول 1448ھ',
-          payee_name: 'قاری محمد قمر صاحب',
-          payee_phone: '03457814592',
-          category: 'امام و خطیب مشاہرہ',
-          description: 'ماہانہ مشاہرہ برائے ماہ اکتوبر 2026',
-          amount_numeric: 25000,
-          amount_words: 'پچیس ہزار روپے فقط',
-          payment_mode: 'نقد',
-          approved_by: 'مولانا محمد قمر (امام و منتظم)',
-          created_by_email: 'atiqgorayah@gmail.com',
-          created_at: '2026-10-25T12:00:00+05:00',
-          offline_created_at: '2026-10-25T12:00:00+05:00',
-          device_id: 'DEV-A101',
-          updated_by_email: '',
-          updated_at: '2026-10-25T12:00:00+05:00',
-          version: 1,
-          deleted: false
-        }
-      ],
+      expenses: [],
       failedAttemptsByEmail: {},
       lockUntilByEmail: {},
       lastUpdatedServerTime: '',
@@ -2855,8 +2834,11 @@
         }
         if (raw) {
           const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            state.expenses = parsed;
+          if (Array.isArray(parsed)) {
+            // Remove any seed/sample dummy expense so payment starts from 0
+            const clean = parsed.filter((e) => e && e.temp_id !== 'SEED-EXP-1001' && e.voucher_no !== 'EXP-2026-10-0001');
+            state.expenses = clean;
+            saveExpensesToLocalStorage();
             return true;
           }
         }
@@ -2864,6 +2846,28 @@
         console.warn('localStorage expense load warning:', e);
       }
       return false;
+    }
+
+    function clearAllExpenses() {
+      if (!confirm('کیا آپ واقعی تمام اخراجات ختم کر کے ادائیگی کا خانہ 0 سے شروع کرنا چاہتے ہیں؟')) return;
+      state.expenses = [];
+      state.expenseSeqCounter = 0;
+      saveExpensesToLocalStorage();
+      renderDashboardView();
+      renderCashbookDashboard();
+      showToast('ادائیگی / اخراجات کا ریکارڈ کامیابی سے 0 کر دیا گیا ہے۔', 'success');
+    }
+
+    function deleteSingleExpense(voucherNo) {
+      if (!confirm(`کیا آپ واقعی واؤچر نمبر ${voucherNo} کو حذف کرنا چاہتے ہیں؟`)) return;
+      const idx = state.expenses.findIndex((e) => e.voucher_no === voucherNo || e.temp_id === voucherNo);
+      if (idx !== -1) {
+        state.expenses.splice(idx, 1);
+        saveExpensesToLocalStorage();
+        renderDashboardView();
+        renderCashbookDashboard();
+        showToast(`واؤچر ${voucherNo} حذف کر دیا گیا ہے۔`, 'info');
+      }
     }
 
     
@@ -4001,6 +4005,7 @@
                 <div class="flex items-center justify-center gap-1">
                   <button type="button" onclick="printSingleCashbookItem('${item.type}', '${item.no}')" class="px-2 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs" title="پرنٹ کریں">🖨️</button>
                   <button type="button" onclick="shareSingleCashbookItem('${item.type}', '${item.no}')" class="px-2 py-1 rounded bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-xs" title="واٹس ایپ شیئر">💬</button>
+                  ${!item.isIncome ? `<button type="button" onclick="deleteSingleExpense('${item.no}')" class="px-2 py-1 rounded bg-rose-100 hover:bg-rose-200 text-rose-800 text-xs font-bold" title="خرچ حذف کریں">🗑️</button>` : ''}
                 </div>
               </td>
             `;
@@ -5232,6 +5237,7 @@
       if (expDateEl) expDateEl.value = document.getElementById('inputDateFormatted')?.value || '02 نومبر 2026';
       updateLiveExpensePreview();
       renderCashbookDashboard();
+      renderDashboardView();
       applyPakistanDateToForm(new Date(), false);
       updateLiveFormPreview();
       pollLiveReceiptsFromServer(false);
